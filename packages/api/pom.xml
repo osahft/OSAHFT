@@ -27,6 +27,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--LOMBOK-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -34,6 +41,33 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>build-info</id>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-assertions-generator-maven-plugin</artifactId>
+				<version>2.2.0</version>
+				<configuration>
+					<!-- when generating: set skip to false -->
+					<skip>true</skip>
+					<generateAssertionsInPackage>com.osahft.api.internal.assertion</generateAssertionsInPackage>
+					<generatedSourcesScope>compile</generatedSourcesScope>
+					<generateAssertions>true</generateAssertions>
+					<generateSoftAssertions>false</generateSoftAssertions>
+					<generateBddAssertions>false</generateBddAssertions>
+					<generateJUnitSoftAssertions>false</generateJUnitSoftAssertions>
+					<cleanTargetDir>true</cleanTargetDir>
+					<packages>
+						<param>com.osahft.api.model</param>
+					</packages>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
