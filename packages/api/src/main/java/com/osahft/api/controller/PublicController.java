@@ -1,6 +1,5 @@
 package com.osahft.api.controller;
 
-import com.osahft.api.constant.ControllerConstants;
 import com.osahft.api.model.SoftwareVersionInformation;
 import com.osahft.api.test.service.PublicServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@RequestMapping("/public")
 public class PublicController {
-    private final String controllerPath = "/public";
 
     @Autowired
     private PublicServiceIF publicService;
 
-    @RequestMapping(value = ControllerConstants.basePath + controllerPath + "/software/version", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/software/version", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public SoftwareVersionInformation retrieveSoftwareVersionInformation() {
         return publicService.retrieveSoftwareVersionInformation();
     }
