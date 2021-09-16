@@ -1,22 +1,30 @@
 package com.osahft.api.controller;
 
+import com.osahft.api.constant.ApiConstants;
 import com.osahft.api.model.SoftwareVersionInformation;
-import com.osahft.api.test.service.PublicServiceIF;
+import com.osahft.api.service.PublicServiceIF;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/public")
+@Tag(name = "public", description = "Public API (software information)")
+@RequestMapping(ApiConstants.API_VERSION + "/public")
 public class PublicController {
 
     @Autowired
     private PublicServiceIF publicService;
 
-    @RequestMapping(value = "/software/version", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Retrieve software version information", description = "public/getPublicSoftwareVersion.md")
+    @GetMapping(value = "/software/version", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
     public SoftwareVersionInformation retrieveSoftwareVersionInformation() {
         return publicService.retrieveSoftwareVersionInformation();
     }

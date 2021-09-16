@@ -1,6 +1,7 @@
 package com.osahft.api.test.service;
 
 import com.osahft.api.model.SoftwareVersionInformation;
+import com.osahft.api.service.PublicServiceIF;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

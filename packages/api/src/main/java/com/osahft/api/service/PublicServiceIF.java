@@ -1,4 +1,4 @@
-package com.osahft.api.test.service;
+package com.osahft.api.service;
 
 import com.osahft.api.model.SoftwareVersionInformation;
 
