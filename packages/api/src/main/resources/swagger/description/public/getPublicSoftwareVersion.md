@@ -4,7 +4,7 @@ Public software version information.
 ## Precondition:
 None.
 
-## Effects:
+## Postcondition:
 Software version information is returned.
 
 ## Further Information:
