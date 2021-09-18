@@ -5,7 +5,7 @@ name: Create and publish Docker image for osahft/api
 
 on:
   push:
-    branches: ['develop']
+    branches: ['setup/ghActions']
 
 env:
   REGISTRY: ghcr.io
