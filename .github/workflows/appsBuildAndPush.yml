@@ -5,7 +5,7 @@ name: Create and publish a Docker images
 
 on:
   push:
-    branches: ['develop']
+    branches: ['setup/ghActions']
 
 env:
   REGISTRY: ghcr.io
