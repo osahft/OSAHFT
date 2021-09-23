@@ -22,6 +22,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        run: |
+          cd packages/api
+          echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
@@ -30,16 +33,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#      - name: Extract metadata (tags, labels) for Docker
+#        id: meta
+#        uses: docker/metadata-action@v3
+#        with:
+#          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#          tags: |
+#            type=semver,pattern={{version}},value=${{env.VERSION}}
 
       - name: Build and push APP Docker image
         uses: docker/build-push-action@v2
         with:
           context: ./packages/app
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{env.VERSION}}
           labels: ${{ steps.meta.outputs.labels }}
