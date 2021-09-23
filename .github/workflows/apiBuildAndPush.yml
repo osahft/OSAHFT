@@ -5,7 +5,8 @@ name: Create and publish docker image for osahft/api
 
 on:
   push:
-    branches: ['develop']
+    branches:
+      - "develop"
 
 env:
   REGISTRY: ghcr.io
@@ -36,6 +37,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push API Docker image
+        uses: docker/build-push-action@v2
         with:
           context: ./packages/api
           push: true
