@@ -42,4 +42,4 @@ jobs:
         with:
           context: ./packages/app
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.package-version.outputs.current-version}}
+          tags: ${{ toLower(env.IMAGE_NAME) }}:${{ steps.package-version.outputs.current-version}}
