@@ -6,7 +6,7 @@ name: Create and publish Docker image for osahft/app
 on:
   push:
     branches:
-      - "fix/workflows"
+      - "develop"
 
 env:
   REGISTRY: ghcr.io
@@ -36,7 +36,7 @@ jobs:
         with:
           path: ./packages/app
 
-      - name: Set image name to lowercase
+      - name: $IMAGE_NAME to lowercase
         id: string
         uses: ASzc/change-string-case-action@v1
         with:
