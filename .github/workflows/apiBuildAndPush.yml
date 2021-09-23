@@ -22,11 +22,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Retrieve version
-        id: api-version
-        working-directory: ./packages/api
-        run: |
-          echo "::set-output name=current-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          id: api-version
+          working-directory: ./packages/api
+          run: |
+            echo "::set-output name=current-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
