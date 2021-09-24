@@ -58,3 +58,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+######################
+### Docker Compose ###
+######################
+.env

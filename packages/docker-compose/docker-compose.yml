@@ -10,16 +10,28 @@ services:
         target: /etc/osahft/api.properties
     networks:
       - osahft
+      - osahft_couchdb
     ports:
-      - 8080:8080
+      - "8080:8080"
+  db:
+    image: couchdb:3.1.1
+    container_name: osahft-couchdb
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+    networks:
+      - osahft_couchdb
+
   app:
     image: ghcr.io/bastianbeier/osahft-app:0.0.1-snapshot
     container_name: osahft-app
     networks:
       - osahft
     ports:
-      - 80:4200
+      - "80:4200"
 
 networks:
   osahft:
+    driver: bridge
+  osahft_couchdb:
     driver: bridge
