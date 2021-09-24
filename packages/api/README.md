@@ -10,12 +10,14 @@
 ### Build
 
 - JAR: `mvn clean package`
-- Docker Image: `docker build . -t $IMAGE_TAG`
+- Docker Image: `docker build . -t ${IMAGE_TAG}`
 
 ### Run
 
-- JAR: `java -jar api.jar`
-- Docker Image: `docker run $IMAGE_TAG`
+-
+JAR: `java -jar api.jar --spring.config.location=classpath:/application.properties,${PATH_TO_API_PROPERTIES}/api.properties`
+- Docker
+  Image: `docker run ${IMAGE_TAG} --mount type=bind,source=${PATH_TO_API_PROPERTIES}/api.properties,target=/etc/osahft/api.properties`
 
 ## How to generate assertions for unit tests
 
