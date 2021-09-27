@@ -4,6 +4,10 @@ services:
   api:
     image: ghcr.io/bastianbeier/osahft-api:0.0.1-snapshot
     container_name: osahft-api
+    volumes:
+      - type: bind
+        source: ./api.properties
+        target: /etc/osahft/api.properties
     networks:
       - osahft
     ports:
@@ -14,7 +18,7 @@ services:
     networks:
       - osahft
     ports:
-      - 80:4200
+      - 80:80
 
 networks:
   osahft:
