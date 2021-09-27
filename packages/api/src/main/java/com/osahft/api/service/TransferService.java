@@ -25,7 +25,7 @@ public class TransferService implements TransferServiceIF {
         MailTransfer mailTransfer = MailTransfer.builder()
                 .id(availableId++)
                 .mailSender(createMailTransferRequest.getMailSender())
-                .mailReceiver(createMailTransferRequest.getMailReceiver())
+                .mailReceivers(createMailTransferRequest.getMailReceivers())
                 .title(createMailTransferRequest.getTitle())
                 .message(createMailTransferRequest.getMessage())
                 .build();
