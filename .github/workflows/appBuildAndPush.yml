@@ -1,7 +1,7 @@
 # This workflow uses several third-party actions to build a Docker image for the OSAHFT FRONTEND (./app)
 # and if the build succeeds, push the built image to GitHub Packages.
 
-name: Create and publish Docker image for osahft/app
+name: Create osahft/app and publish docker image
 
 on:
   workflow_dispatch:
