@@ -28,7 +28,7 @@ services:
     networks:
       - osahft
     ports:
-      - "80:4200"
+      - 80:80
 
 networks:
   osahft:

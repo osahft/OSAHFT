@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.List;
+
 @Data
 @Builder
 public class CreateMailTransferRequest {
@@ -12,7 +14,7 @@ public class CreateMailTransferRequest {
     private String mailSender;
 
     @NonNull
-    private String mailReceiver;
+    private List<String> mailReceivers;
 
     private String title;
 
