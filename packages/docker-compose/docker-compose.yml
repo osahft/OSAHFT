@@ -21,6 +21,8 @@ services:
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
     networks:
       - osahft_couchdb
+    ports:
+      - "5984:5984"
 
   app:
     image: ghcr.io/bastianbeier/osahft-app:0.0.1-snapshot
@@ -28,7 +30,7 @@ services:
     networks:
       - osahft
     ports:
-      - 80:80
+      - "80:80"
 
 networks:
   osahft:
