@@ -1,0 +1,26 @@
+* {
+  font-family: Lato;
+  margin: 5px;
+}
+.main {
+  margin: 25px;
+}
+ngx-dropzone,
+.custom-dropzone {
+  height: 250px;
+  font-size: 20px;
+  background:rgba(255,255,255,0.5);
+}
+
+.custom-dropzone.ngx-dz-hovered {
+  border: 5px solid rgb(235, 79, 79);
+}
+
+.input_area {
+  width: 100%;
+}
+
+.a{
+  margin: 5px;
+  width: 40%;
+}
