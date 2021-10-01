@@ -1,42 +1,58 @@
-<div class="main">
-  <h1>OSAHFT - Open Source Ad-Hoc File Transfer</h1>
-  <br/>
-  <div #drop class="custom-dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
-    <ngx-dropzone-label>
-      <div>
-        <h2>Drop Files to Upload</h2>
-      </div>
-    </ngx-dropzone-label>
-    <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true"
-                                (removed)="onRemove(f)">
-      <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-    </ngx-dropzone-image-preview>
-  </div>
-
-  <button (click)="drop.showFileSelector()">Select Files</button>
-
-  <div class="input_area">
-    <label for="title" class="a">Title</label>
-    <br/>
-    <input type="text" id="title" class="a">
-    <br/>
-    <label for="msg" class="a">Message</label>
-    <br/>
-    <textarea id="msg" class="a"></textarea>
-    <br/>
-    <label for="send-email" class="a">Sender E-Mail Address</label>
-    <br/>
-    <input type="email" id="send-email" name="email" class="a">
-    <br/>
-    <label for="rec-email" class="a">Receiver E-Mail Address</label>
-    <br/>
-    <div ng-repeat="n in [].constructor(5) track by receivers">
-      <input type="email" id="rec-email" name="email" class="a">
+<div class="container h-100 d-flex">
+  <div class="row align-items-center h-100">
+    <div class="col-12 mx-auto">
+      <div class="osahft-content">
+      <h1 class="text-lowercase">Welcome to OSAHFT</h1>
+      <h2 class="small text-lowercase">Your Free-To-Use Open Source Ad Hoc File Transfer</h2>
       <br/>
+      <form>
+        <div class="form-group">
+          <div #drop class="custom-dropzone mb-3" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+            <ngx-dropzone-label>
+              <div>
+                <p>Drop Files to Upload</p>
+                <small>Click Here To Open File Wizard, too.</small>
+              </div>
+            </ngx-dropzone-label>
+            <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f"
+                                        [removable]="true"
+                                        (removed)="onRemove(f)">
+              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+            </ngx-dropzone-image-preview>
+          </div>
+
+          <!--<button type="button" class="btn btn-secondary" (click)="drop.showFileSelector()">Select Files</button>-->
+        </div>
+
+        <div class="form-group">
+          <label for="senderEmail" class="form-label">Title</label>
+          <input type="text" id="messageTitle" name="messageTitle" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="message" class="form-label">Message</label>
+          <textarea id="message" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="senderEmail" class="form-label">Sender E-Mail Address</label>
+          <input type="email" id="senderEmail" name="senderEmail" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="receiverEmail" class="form-label">Receiver E-Mail Address</label>
+          <div ng-repeat="n in [].constructor(5) track by receivers">
+            <input type="email" id="receiverEmail" name="receiverEmail" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" id="termsAndConditions">
+          <label class="form-check-label" for="termsAndConditions">Add some stuff about privacy and tac here.</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Transfer</button>
+      </form>
+      </div>
     </div>
-    <br/>
   </div>
-  <button>Transfer</button>
 </div>
-
-
