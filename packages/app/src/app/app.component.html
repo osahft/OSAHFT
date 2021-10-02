@@ -2,54 +2,79 @@
   <div class="row align-items-center h-100">
     <div class="col-12 mx-auto">
       <div class="osahft-content">
-      <h1 class="text-lowercase">Welcome to OSAHFT</h1>
-      <h2 class="small text-lowercase">Your Free-To-Use Open Source Ad Hoc File Transfer</h2>
-      <br/>
-      <form>
-        <div class="form-group">
-          <div class="custom-dropzone mb-3" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
-            <ngx-dropzone-label>
-              <div>
-                <p>Drop Files to Upload</p>
-                <small>Click Here To Open File Wizard, too.</small>
-              </div>
-            </ngx-dropzone-label>
-            <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f"
-                                        [removable]="true"
-                                        (removed)="onRemove(f)">
-              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-            </ngx-dropzone-image-preview>
+        <h1 class="text-lowercase">Welcome to OSAHFT</h1>
+        <h2 class="small text-lowercase">Your Free-To-Use Open Source Ad Hoc File Transfer</h2>
+        <br/>
+        <form>
+          <div class="form-group">
+            <div class="custom-dropzone mb-3" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+              <ngx-dropzone-label>
+                <div>
+                  <p>Drop Files to Upload</p>
+                  <small>Click Here To Open File Wizard, too.</small>
+                </div>
+              </ngx-dropzone-label>
+              <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f"
+                                          [removable]="true"
+                                          (removed)="onRemove(f)">
+                <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+              </ngx-dropzone-image-preview>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="senderEmail" class="form-label">Title</label>
-          <input type="text" id="messageTitle" name="messageTitle" class="form-control">
-        </div>
-
-        <div class="form-group">
-          <label for="message" class="form-label">Message</label>
-          <textarea id="message" class="form-control"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="senderEmail" class="form-label">Sender E-Mail Address</label>
-          <input type="email" id="senderEmail" name="senderEmail" class="form-control">
-        </div>
-
-        <div class="form-group">
-          <label for="receiverEmail" class="form-label">Receiver E-Mail Address</label>
-          <div ng-repeat="n in [].constructor(5) track by receivers">
-            <input type="email" id="receiverEmail" name="receiverEmail" class="form-control">
+          <div class="form-group">
+            <label for="messageTitle" class="form-label">Title</label>
+            <input type="text" #messageTitle="ngModel" [class.is-invalid]="messageTitle.invalid && messageTitle.touched"
+                   [required]=true
+                   [(ngModel)]="mailTitle" class="form-control" name="messageTitle" id="messageTitle"/>
+            <div *ngIf="messageTitle.errors && messageTitle.invalid && messageTitle.touched">
+              <small class="text-danger" *ngIf="messageTitle.errors.required">Title is required</small>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="termsAndConditions" (change)="isPrivacySelected=!isPrivacySelected">
-          <label class="form-check-label" for="termsAndConditions">Add some stuff about privacy and tac here.</label>
-        </div>
-        <button type="submit" class="btn btn-primary" [disabled]=!isPrivacySelected >Transfer</button>
-      </form>
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" class="form-control" [(ngModel)]="messageBody"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="senderEmail">Sender E-Mail Address</label>
+            <input type="email" #senderEmail="ngModel" [class.is-invalid]="senderEmail.invalid && senderEmail.touched"
+                   [pattern]=emailPattern class="form-control" name="senderEmail"
+                   [required]=true
+                   [(ngModel)]="senderAddress" id="senderEmail"/>
+
+            <div *ngIf="senderEmail.errors && senderEmail.invalid && senderEmail.touched">
+              <small class="text-danger" *ngIf="senderEmail.errors.required">Sender email is required</small>
+              <small class="text-danger" *ngIf="senderEmail.errors.pattern">Please provide a valid email address</small>
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label for="receiverEmail">Receiver E-Mail Address</label>
+            <input type="email" #receiverEmail="ngModel"
+                   [class.is-invalid]="receiverEmail.invalid && receiverEmail.touched"
+                   [pattern]=emailPattern class="form-control"
+                   [required]=true
+                   name="receiverEmail"
+                   [(ngModel)]="receiverAddress" id="receiverEmail"/>
+
+            <div *ngIf="receiverEmail.errors && receiverEmail.invalid && receiverEmail.touched">
+              <small class="text-danger" *ngIf="receiverEmail.errors.required">Receiver email is required</small>
+              <small class="text-danger" *ngIf="receiverEmail.errors.pattern">Please provide a valid email
+                address</small>
+            </div>
+          </div>
+
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="termsAndConditions"
+                   (change)="isPrivacySelected=!isPrivacySelected">
+            <label class="form-check-label" for="termsAndConditions">Add some stuff about privacy and tac here.</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]=isInputValid()>Transfer</button>
+        </form>
       </div>
     </div>
   </div>

@@ -20,4 +20,15 @@ export class AppComponent {
     console.log(event);
     this.files.splice(this.files.indexOf(event), 1);
   }
+
+  isInputValid() {
+    return !this.isPrivacySelected;
+  }
+
+  emailPattern: string = "^[a-zA-Z0-9._% -]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+
+  mailTitle: string = '';
+  messageBody: string = '';
+  senderAddress: string = '';
+  receiverAddress: string = '';
 }
