@@ -7,7 +7,7 @@
       <br/>
       <form>
         <div class="form-group">
-          <div #drop class="custom-dropzone mb-3" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+          <div class="custom-dropzone mb-3" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
             <ngx-dropzone-label>
               <div>
                 <p>Drop Files to Upload</p>
@@ -20,8 +20,6 @@
               <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
             </ngx-dropzone-image-preview>
           </div>
-
-          <!--<button type="button" class="btn btn-secondary" (click)="drop.showFileSelector()">Select Files</button>-->
         </div>
 
         <div class="form-group">
@@ -47,10 +45,10 @@
         </div>
 
         <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="termsAndConditions">
+          <input type="checkbox" class="form-check-input" id="termsAndConditions" (change)="isPrivacySelected=!isPrivacySelected">
           <label class="form-check-label" for="termsAndConditions">Add some stuff about privacy and tac here.</label>
         </div>
-        <button type="submit" class="btn btn-primary">Transfer</button>
+        <button type="submit" class="btn btn-primary" [disabled]=!isPrivacySelected >Transfer</button>
       </form>
       </div>
     </div>

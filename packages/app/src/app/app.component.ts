@@ -8,6 +8,7 @@ import {Component} from '@angular/core';
 export class AppComponent {
   title = 'app';
 
+  isPrivacySelected: boolean = false;
   files: File[] = [];
 
   onSelect(event: any) {
