@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {AbstractControl} from "@angular/forms";
+
 
 @Component({
   selector: 'app-root',
@@ -8,8 +10,19 @@ import {Component} from '@angular/core';
 export class AppComponent {
   title = 'app';
 
-  isPrivacySelected: boolean = false;
+  mailTitle: string = '';
+  messageBody: string = '';
+  senderAddress: string[] = [];
+  receiverAddresses: string[] = [];
   files: File[] = [];
+
+  isPrivacySelected: boolean = false;
+  isTitleValid: boolean = false;
+
+  errorMessages = {
+    'pattern': 'Email must be in format abc@abc.com',
+  };
+  validators = [this.checkPattern];
 
   onSelect(event: any) {
     console.log(event);
@@ -22,13 +35,25 @@ export class AppComponent {
   }
 
   isInputValid() {
-    return !this.isPrivacySelected;
+    return !(this.isPrivacySelected && this.isTitleValid && this.receiverAddresses.length > 0 && this.senderAddress.length > 0 && this.files.length > 0);
   }
 
-  emailPattern: string = "^[a-zA-Z0-9._% -]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+  checkPattern(control: AbstractControl) {
+    const patternRegex = /^[A-Za-z0–9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+    if (patternRegex.test(control.value)) {
+      console.log("Match exists.");
+    } else {
+      return {'pattern': true}
+    }
+    return null;
+  }
 
-  mailTitle: string = '';
-  messageBody: string = '';
-  senderAddress: string = '';
-  receiverAddress: string = '';
+  transfer() {
+    console.log(this.files)
+    console.log(this.mailTitle)
+    console.log(this.messageBody)
+    console.log(this.senderAddress)
+    console.log(this.receiverAddresses)
+  }
+
 }

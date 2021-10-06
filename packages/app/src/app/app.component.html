@@ -26,6 +26,7 @@
             <label for="messageTitle" class="form-label">Title</label>
             <input type="text" #messageTitle="ngModel" [class.is-invalid]="messageTitle.invalid && messageTitle.touched"
                    [required]=true
+                   (change)="isTitleValid = mailTitle.length > 0"
                    [(ngModel)]="mailTitle" class="form-control" name="messageTitle" id="messageTitle"/>
             <div *ngIf="messageTitle.errors && messageTitle.invalid && messageTitle.touched">
               <small class="text-danger" *ngIf="messageTitle.errors.required">Title is required</small>
@@ -35,36 +36,20 @@
           <div class="form-group">
             <label for="message" class="form-label">Message</label>
             <textarea id="message" class="form-control" [(ngModel)]="messageBody"></textarea>
-          </div>
 
-          <div class="form-group">
-            <label for="senderEmail">Sender E-Mail Address</label>
-            <input type="email" #senderEmail="ngModel" [class.is-invalid]="senderEmail.invalid && senderEmail.touched"
-                   [pattern]=emailPattern class="form-control" name="senderEmail"
-                   [required]=true
-                   [(ngModel)]="senderAddress" id="senderEmail"/>
+            <tag-input [(ngModel)]=senderAddress name="sender" [displayBy]="'label'" [validators]="validators" [identifyBy]="'label'"
+                       [theme]="'bootstrap-light'"
+                        placeholder="+ From" [separatorKeyCodes]="[32, 188]" secondaryPlaceholder="From"
+                       [errorMessages]="errorMessages" [removable]=true [maxItems]="1">
 
-            <div *ngIf="senderEmail.errors && senderEmail.invalid && senderEmail.touched">
-              <small class="text-danger" *ngIf="senderEmail.errors.required">Sender email is required</small>
-              <small class="text-danger" *ngIf="senderEmail.errors.pattern">Please provide a valid email address</small>
-            </div>
+            </tag-input>
 
-          </div>
+            <tag-input [(ngModel)]=receiverAddresses name="receivers" [displayBy]="'label'" [validators]="validators" [identifyBy]="'label'"
+                       [theme]="'bootstrap-light'"
+                       placeholder="+ To" [separatorKeyCodes]="[32, 188]" secondaryPlaceholder="To"
+                       [errorMessages]="errorMessages" [removable]=true>
 
-          <div class="form-group">
-            <label for="receiverEmail">Receiver E-Mail Address</label>
-            <input type="email" #receiverEmail="ngModel"
-                   [class.is-invalid]="receiverEmail.invalid && receiverEmail.touched"
-                   [pattern]=emailPattern class="form-control"
-                   [required]=true
-                   name="receiverEmail"
-                   [(ngModel)]="receiverAddress" id="receiverEmail"/>
-
-            <div *ngIf="receiverEmail.errors && receiverEmail.invalid && receiverEmail.touched">
-              <small class="text-danger" *ngIf="receiverEmail.errors.required">Receiver email is required</small>
-              <small class="text-danger" *ngIf="receiverEmail.errors.pattern">Please provide a valid email
-                address</small>
-            </div>
+            </tag-input>
           </div>
 
           <div class="form-group form-check">
@@ -73,7 +58,7 @@
             <label class="form-check-label" for="termsAndConditions">Add some stuff about privacy and tac here.</label>
           </div>
 
-          <button type="submit" class="btn btn-primary" [disabled]=isInputValid()>Transfer</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isInputValid()" (click)="transfer()">Transfer</button>
         </form>
       </div>
     </div>
