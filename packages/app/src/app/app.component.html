@@ -36,15 +36,25 @@
           <div class="form-group">
             <label for="message" class="form-label">Message</label>
             <textarea id="message" class="form-control" [(ngModel)]="messageBody"></textarea>
+          </div>
 
-            <tag-input [(ngModel)]=senderAddress name="sender" [displayBy]="'label'" [validators]="validators" [identifyBy]="'label'"
-                       [theme]="'bootstrap-light'"
-                        placeholder="+ From" [separatorKeyCodes]="[32, 188]" secondaryPlaceholder="From"
-                       [errorMessages]="errorMessages" [removable]=true [maxItems]="1">
+          <div class="form-group">
+            <label for="senderEmail">Sender E-Mail Address</label>
+            <input type="email" #senderEmail="ngModel" [class.is-invalid]="senderEmail.invalid && senderEmail.touched"
+                   [pattern]="emailPattern" class="form-control" name="senderEmail"
+                   [required]=true
+                   [(ngModel)]="senderAddress" id="senderEmail"/>
 
-            </tag-input>
+            <div *ngIf="senderEmail.errors && senderEmail.invalid && senderEmail.touched">
+              <small class="text-danger" *ngIf="senderEmail.errors.required">Sender email is required</small>
+              <small class="text-danger" *ngIf="senderEmail.errors.pattern">Please provide a valid email address</small>
+            </div>
 
-            <tag-input [(ngModel)]=receiverAddresses name="receivers" [displayBy]="'label'" [validators]="validators" [identifyBy]="'label'"
+          </div>
+
+          <div class="form-group">
+            <tag-input [(ngModel)]=receiverAddresses name="receivers" [displayBy]="'label'" [validators]="validators"
+                       [identifyBy]="'label'"
                        [theme]="'bootstrap-light'"
                        placeholder="+ To" [separatorKeyCodes]="[32, 188]" secondaryPlaceholder="To"
                        [errorMessages]="errorMessages" [removable]=true>
@@ -58,7 +68,8 @@
             <label class="form-check-label" for="termsAndConditions">Add some stuff about privacy and tac here.</label>
           </div>
 
-          <button type="submit" class="btn btn-primary" [disabled]="isInputValid()" (click)="transfer()">Transfer</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isInputValid()" (click)="transfer()">Transfer
+          </button>
         </form>
       </div>
     </div>

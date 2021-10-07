@@ -24,6 +24,8 @@ export class AppComponent {
   };
   validators = [this.checkPattern];
 
+  emailPattern: string = "^[A-Za-z0–9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
+
   onSelect(event: any) {
     console.log(event);
     this.files.push(...event.addedFiles);
@@ -39,7 +41,7 @@ export class AppComponent {
   }
 
   checkPattern(control: AbstractControl) {
-    const patternRegex = /^[A-Za-z0–9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+    const patternRegex = /^[A-Za-z0–9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/;
     if (patternRegex.test(control.value)) {
       console.log("Match exists.");
     } else {

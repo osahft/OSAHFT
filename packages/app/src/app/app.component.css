@@ -11,5 +11,7 @@ ngx-dropzone,
 
 .osahft-content {
   padding: 2em;
+  max-widht: 600px;
+  max-width: 30vw;
   box-shadow: 0 0.1rem 1rem rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
