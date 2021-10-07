@@ -1,10 +1,14 @@
+# This workflow uses several third-party actions to trigger deployment to server.
+#
+# Third-party actions used:
+# - distributhor/workflow-webhook@v2 | https://github.com/distributhor/workflow-webhook
+#
+# @TODO: Add repository secrets; remove GH webhook; add WEBHOOK_SECRET to server hooks.json
+
 name: Trigger deployment to server
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - setup/combined-workflows
 
 jobs:
   deployToServer:
@@ -24,8 +28,6 @@ jobs:
         uses: distributhor/workflow-webhook@v2
         env:
           webhook_type: json-extended
-          webhook_url: 'ec2-18-188-198-157.us-east-2.compute.amazonaws.com:9000/hooks/ghcr-deploy' # for testing interim aws instance
-          webhook_secret: 'test123'
-          #webhook_url: '${{ secrets.WEBHOOK_URL }}'
-          #webhook_secret: '${{ secrets.WEBHOOK_SECRET }}'
+          webhook_url: '${{ secrets.WEBHOOK_URL }}'
+          webhook_secret: '${{ secrets.WEBHOOK_SECRET }}'
           data: '{ "timestamp": "${{ steps.timestamp.outputs.timestamp }}" }'

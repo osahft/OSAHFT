@@ -1,6 +1,7 @@
 # This workflow uses several third-party actions to build a Docker image
-# for the osahft-api (backend, `./api`) and osahft-app (frontend), `./app`),
-# and if the build succeeds, pushes the built images to GitHub Packages Registry.
+# for the osahft-api (backend, `./api`) and osahft-app (frontend), `./app`).
+# If the build succeeds, it then pushes the built images to GitHub Packages Registry,
+# and subsequently triggers deployment to the server.
 #
 # Third-party actions used:
 # - actions/checkout@v2 | https://github.com/actions/checkout
@@ -118,8 +119,6 @@ jobs:
         uses: distributhor/workflow-webhook@v2
         env:
           webhook_type: json-extended
-          webhook_url: 'ec2-18-188-198-157.us-east-2.compute.amazonaws.com:9000/hooks/ghcr-deploy' # for testing interim aws instance
-          webhook_secret: 'test123'
-          #webhook_url: '${{ secrets.WEBHOOK_URL }}'
-          #webhook_secret: '${{ secrets.WEBHOOK_SECRET }}'
+          webhook_url: '${{ secrets.WEBHOOK_URL }}'
+          webhook_secret: '${{ secrets.WEBHOOK_SECRET }}'
           data: '{ "timestamp": "${{ steps.timestamp.outputs.timestamp }}" }'
