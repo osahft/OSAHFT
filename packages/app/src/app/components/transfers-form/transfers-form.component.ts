@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {AbstractControl} from "@angular/forms";
 import {TransfersService} from "../../service/transfers.service";
 import {Types} from "../../shared/types";
-import CreateMailTransferResponse = Types.CreateMailTransferResponse;
 
 @Component({
   selector: 'app-transfers-form',
@@ -76,14 +75,14 @@ export class TransfersFormComponent implements OnInit {
       files: this.files
     }
 
-    const transferResponse: CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody).toPromise();
+    const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody).toPromise();
     let success = await this.transferService.uploadFiles(transferResponse.mailTransferId, fileUpload).toPromise();
 
     if(!!success) {
       success = this.transferService.completeMailTransfer(transferResponse.mailTransferId).toPromise();
     }
 
-    // @TODO: do some stuff on success
+    // @TODO: do some fancy stuff on success, for now just log
     console.log(success);
   }
 
