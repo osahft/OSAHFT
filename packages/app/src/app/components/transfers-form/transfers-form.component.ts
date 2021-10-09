@@ -21,7 +21,7 @@ export class TransfersFormComponent implements OnInit {
   isTitleValid: boolean = false;
 
   errorMessages = {
-    'pattern': 'Email must be in format abc@abc.com',
+    'pattern': 'Please provide a valid email address of format abc@domain.com',
   };
   validators = [this.checkPattern];
 

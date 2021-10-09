@@ -40,16 +40,17 @@
 
     <div *ngIf="senderEmail.errors && senderEmail.invalid && senderEmail.touched">
       <small class="text-danger" *ngIf="senderEmail.errors.required">Sender email is required</small>
-      <small class="text-danger" *ngIf="senderEmail.errors.pattern">Please provide a valid email address</small>
+      <small class="text-danger" *ngIf="senderEmail.errors.pattern">Please provide a valid email address of format abc@domain.com</small>
     </div>
 
   </div>
 
   <div class="form-group">
+    <label class="form-label">Receivers</label>
     <tag-input [(ngModel)]=receiverAddresses name="receivers" [displayBy]="'label'" [validators]="validators"
                [identifyBy]="'label'"
-               [theme]="'bootstrap-light'"
-               placeholder="+ To" [separatorKeyCodes]="[32, 188]" secondaryPlaceholder="To"
+               [theme]="'osahft-theme'"
+               placeholder="+" [separatorKeyCodes]="[32, 188]" secondaryPlaceholder=""
                [errorMessages]="errorMessages" [removable]=true>
 
     </tag-input>
