@@ -6,7 +6,7 @@ import {Types} from "../../shared/types";
 @Component({
   selector: 'app-transfers-form',
   templateUrl: './transfers-form.component.html',
-  styleUrls: ['./transfers-form.component.css'],
+  styleUrls: ['./transfers-form.component.scss'],
   exportAs: "transfersForm",
 })
 
