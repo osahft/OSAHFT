@@ -14,7 +14,7 @@ export class TransfersFormComponent implements OnInit {
   mailTitle: string = '';
   messageBody: string = '';
   senderAddress: string = '';
-  receiverAddresses: string[] = [];
+  receiverAddresses: {label: string}[] = [];
   files: File[] = [];
 
   isPrivacySelected: boolean = false;
@@ -66,7 +66,7 @@ export class TransfersFormComponent implements OnInit {
 
     const requestBody: Types.CreateMailTransferRequest = {
       "mailSender": this.senderAddress,
-      "mailReceivers": this.receiverAddresses,
+      "mailReceivers": this.receiverAddresses.map(receivers => receivers.label),
       "title": this.mailTitle,
       "message": this.messageBody
     }

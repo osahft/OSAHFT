@@ -10,7 +10,7 @@ import {catchError} from 'rxjs/operators';
 export class TransfersService {
 
   // @TODO: dynamic api url; move this to a constants.ts file in /app/shared
-  API_URL = 'http://localhost:8080';
+  API_URL = 'http://localhost:8080/api';
   TRANSFERS = '/transfers/mails';
   UPLOADS = '/uploads';
 
@@ -24,7 +24,7 @@ export class TransfersService {
   }
 
   createMailTransfer(mailTransferRequest: Types.CreateMailTransferRequest): Observable<Types.CreateMailTransferResponse> {
-    return this.http.post<Types.CreateMailTransferResponse>(`${this.API_URL}/${this.TRANSFERS}`, JSON.stringify(mailTransferRequest), this.httpOptions)
+    return this.http.post<Types.CreateMailTransferResponse>(`${this.API_URL}${this.TRANSFERS}`, mailTransferRequest, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       )
@@ -38,7 +38,7 @@ export class TransfersService {
   }
 
   uploadFiles(mailTransferId: string, files: Types.UploadFileRequest) {
-    return this.http.post<any>(`${this.API_URL}/${this.TRANSFERS}/${mailTransferId}/${this.UPLOADS}`, files)
+    return this.http.post<any>(`${this.API_URL}${this.TRANSFERS}${mailTransferId}/${this.UPLOADS}`, files)
     // @TODO: possibly add some observer here for fancy animation?
   }
 
