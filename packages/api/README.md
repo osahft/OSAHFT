@@ -14,8 +14,7 @@
 
 ### Run
 
--
-JAR: `java -jar api.jar --spring.config.location=classpath:/application.properties,${PATH_TO_API_PROPERTIES}/api.properties`
+- JAR: `java -jar api.jar --spring.config.location=classpath:/application.properties,${PATH_TO_API_PROPERTIES}/api.properties`
 - Docker
   Image: `docker run --name=${CONTAINER_NAME_OF_CHOICE} --mount type=bind,source=${PATH_TO_API_PROPERTIES}/api.properties,target=/etc/osahft/api.properties ${IMAGE_TAG}`
 
