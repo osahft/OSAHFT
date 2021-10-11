@@ -29,6 +29,9 @@ export class TransfersFormComponent implements OnInit {
 
   constructor(public transferService: TransfersService) { }
 
+  ngOnInit(): void {
+  }
+
   onSelect(event: any) {
     this.files.push(...event.addedFiles);
   }
