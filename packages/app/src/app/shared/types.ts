@@ -12,7 +12,7 @@ export namespace Types {
   }
 
   export interface UploadFileRequest {
-    files: Array<Blob>;
+    files: FormData;
   }
 
 }

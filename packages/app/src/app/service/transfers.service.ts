@@ -11,7 +11,7 @@ export class TransfersService {
 
   // @TODO: dynamic api url; move this to a constants.ts file in /app/shared
   API_URL = 'http://localhost:8080/api';
-  TRANSFERS = '/transfers/mails';
+  TRANSFERS = '/v1/transfers/mails';
   UPLOADS = '/uploads';
 
   constructor(private http: HttpClient) {
@@ -30,16 +30,17 @@ export class TransfersService {
       )
   }
 
-  completeMailTransfer(mailTransferId: string) {
-    return this.http.put<any>(`${this.API_URL}/${this.TRANSFERS}/${mailTransferId}`, {})
+  completeMailTransfer(mailTransferId: string): Observable<boolean> {
+    const idParam = `/${mailTransferId}`
+    return this.http.put<any>(`${this.API_URL}${this.TRANSFERS}${idParam}`, {})
       .pipe(
         catchError(this.handleError)
       )
   }
 
-  uploadFiles(mailTransferId: string, files: Types.UploadFileRequest) {
-    return this.http.post<any>(`${this.API_URL}${this.TRANSFERS}${mailTransferId}/${this.UPLOADS}`, files)
-    // @TODO: possibly add some observer here for fancy animation?
+  uploadFiles(mailTransferId: string, files: FormData): Observable<boolean> {
+    const idParam = `/${mailTransferId}`
+    return this.http.post<any>(`${this.API_URL}${this.TRANSFERS}${idParam}${this.UPLOADS}`, files)
   }
 
   handleError(error: HttpErrorResponse) {

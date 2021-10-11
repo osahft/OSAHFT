@@ -34,7 +34,6 @@ export class TransfersFormComponent implements OnInit {
 
 
   onSelect(event: any) {
-    console.log(event);
     this.files.push(...event.addedFiles);
   }
 
@@ -71,19 +70,23 @@ export class TransfersFormComponent implements OnInit {
       "message": this.messageBody
     }
 
-    const fileUpload: Types.UploadFileRequest = {
-      files: this.files
+    const formData = new FormData();
+    for (const f of this.files) {
+      formData.append("files", f, f.name);
     }
 
+    //@TODO: error handling for service
     const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody).toPromise();
-    let success = await this.transferService.uploadFiles(transferResponse.mailTransferId, fileUpload).toPromise();
+    if(!!transferResponse) console.log("Mail Transfer created");
+    let success = await this.transferService.uploadFiles(transferResponse.mailTransferId, formData).toPromise();
 
-    if(!!success) {
-      success = this.transferService.completeMailTransfer(transferResponse.mailTransferId).toPromise();
+    if(success) {
+      console.log("Files uploaded", success);
+      success = await this.transferService.completeMailTransfer(transferResponse.mailTransferId).toPromise();
     }
 
     // @TODO: do some fancy stuff on success, for now just log
-    console.log(success);
+    console.log("Mail Transfer completed", success);
   }
 
 }
