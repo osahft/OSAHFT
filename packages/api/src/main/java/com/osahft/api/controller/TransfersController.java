@@ -23,7 +23,6 @@ public class TransfersController {
     @Autowired
     private TransferServiceIF transferService;
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Create new mail transfer", description = "transfers/postTransfersMails.md")
     @PostMapping(value = "/mails", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -31,7 +30,6 @@ public class TransfersController {
         return transferService.createNewMailTransfer(createMailTransferRequest);
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Upload files for mail transfer", description = "transfers/postTransfersMailsMailTransferIdUploads.md")
     @PostMapping(value = "/mails/{mail_transfer_id}/uploads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -39,7 +37,6 @@ public class TransfersController {
         transferService.uploadFiles(mailTransferId, files);
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Complete mail transfer", description = "transfers/putMailsMailTransferId.md")
     @PutMapping(value = "/mails/{mail_transfer_id}")
     @ResponseStatus(HttpStatus.OK)
