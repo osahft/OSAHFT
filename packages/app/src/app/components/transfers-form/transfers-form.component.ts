@@ -29,10 +29,6 @@ export class TransfersFormComponent implements OnInit {
 
   constructor(public transferService: TransfersService) { }
 
-  ngOnInit(): void {
-  }
-
-
   onSelect(event: any) {
     this.files.push(...event.addedFiles);
   }
@@ -43,7 +39,7 @@ export class TransfersFormComponent implements OnInit {
   }
 
   isInputValid() {
-    return !(this.isPrivacySelected && this.isTitleValid && this.receiverAddresses.length > 0 && this.senderAddress.length > 0 && this.files.length > 0);
+    return this.isPrivacySelected && this.isTitleValid && this.receiverAddresses.length > 0 && this.senderAddress.length > 0 && this.files.length > 0;
   }
 
   checkPattern(control: AbstractControl) {
@@ -62,6 +58,11 @@ export class TransfersFormComponent implements OnInit {
     console.log(this.messageBody)
     console.log(this.senderAddress)
     console.log(this.receiverAddresses)
+
+    if (!this.isInputValid()) {
+      console.log("Cannot start the transfer due to missing input")
+      return;
+    }
 
     const requestBody: Types.CreateMailTransferRequest = {
       "mailSender": this.senderAddress,
