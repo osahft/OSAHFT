@@ -68,6 +68,11 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         with:
           projectBaseDir: ./packages/app
+          args: >
+            -Dsonar.organization=osahft-org
+            -Dsonar.projectKey=osahft-monorepo-app
+            -Dsonar.sources=src/
+            -Dsonar.verbose=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
