@@ -72,7 +72,7 @@ jobs:
             -Dsonar.organization=osahft-org
             -Dsonar.projectKey=osahft-monorepo-app
             -Dsonar.sources=src/
-            -Dsonar.verbose=true
+            -Dsonar.qualitygate.wait=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
