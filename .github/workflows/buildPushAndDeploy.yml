@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - setup/combined-workflows
+      - develop
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME_API: '${{ github.repository }}-api'
