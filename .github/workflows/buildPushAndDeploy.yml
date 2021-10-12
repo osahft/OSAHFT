@@ -26,8 +26,11 @@ env:
 
 jobs:
   ApiSonarCloud:
-    name: Build API and perform Sonar Analysis
+    name: API SonarCloud Analysis
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/api
     steps:
       - uses: actions/checkout@v2
         with:
@@ -57,6 +60,9 @@ jobs:
   appSonarCloud:
     name: App SonarCloud Analysis
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/app
     steps:
       - uses: actions/checkout@v2
         with:
