@@ -25,7 +25,7 @@ env:
   IMAGE_NAME_APP: '${{ github.repository }}-app'
 
 jobs:
-  ApiSonarCloud:
+  apiSonarCloud:
     name: Api SonarCloud Analysis
     runs-on: ubuntu-latest
     defaults:
