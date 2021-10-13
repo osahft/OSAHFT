@@ -7,9 +7,6 @@ name: Trigger deployment to server
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - setup/combined-workflows
 
 jobs:
   deployToServer:
