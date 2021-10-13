@@ -9,8 +9,6 @@
 # - ASzc/change-string-case-action@v1 | https://github.com/ASzc/change-string-case-action/
 # - martinbeentjes/npm-get-version-action@master | https://github.com/martinbeentjes/npm-get-version-action
 # - distributhor/workflow-webhook@v2 | https://github.com/distributhor/workflow-webhook
-#
-# @TODO: Add repository secrets; remove GH webhook; add WEBHOOK_SECRET to server hooks.json
 
 name: Build osahft and push docker images
 

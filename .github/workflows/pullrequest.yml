@@ -1,3 +1,5 @@
+# This workflow uses several third-party actions to perform code scans and quality analyses for PRs.
+
 
 name: Run sonar scan and quality checks for pull requests
 

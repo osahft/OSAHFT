@@ -2,8 +2,6 @@
 #
 # Third-party actions used:
 # - distributhor/workflow-webhook@v2 | https://github.com/distributhor/workflow-webhook
-#
-# @TODO: Add repository secrets; remove GH webhook; add WEBHOOK_SECRET to server hooks.json
 
 name: Trigger deployment to server
 
