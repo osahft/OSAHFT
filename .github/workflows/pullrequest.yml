@@ -41,8 +41,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-          -Dsonar.organization=osahft
-          -Dsonar.projectName=osahft_monorepo_api
           -Dsonar.projectKey=osahft_monorepo_api
           -Dsonar.qualitygate.wait=true
 
@@ -59,7 +57,6 @@ jobs:
           projectBaseDir: ./packages/app
           args: >
             -Dsonar.organization=osahft
-            -Dsonar.projectName=osahft_monorepo_app
             -Dsonar.projectKey=osahft_monorepo_app
             -Dsonar.sources=src/
             -Dsonar.qualitygate.wait=true
