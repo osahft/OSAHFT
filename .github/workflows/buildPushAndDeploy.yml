@@ -73,8 +73,8 @@ jobs:
           projectBaseDir: ./packages/app
           args: >
             -Dsonar.organization=osahft
-            -Dsonar.projectName=osahft-monorepo-app
-            -Dsonar.projectKey=osahft-monorepo-app
+            -Dsonar.projectName=osahft_monorepo_app
+            -Dsonar.projectKey=osahft_monorepo_app
             -Dsonar.sources=src/
             -Dsonar.qualitygate.wait=true
         env:
