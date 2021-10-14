@@ -56,8 +56,8 @@ jobs:
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           -Dsonar.organization=osahft
-          -Dsonar.projectName=osahft-monorepo-api
-          -Dsonar.projectKey=osahft-monorepo-api
+          -Dsonar.projectName=osahft_monorepo_api
+          -Dsonar.projectKey=osahft_monorepo_api
           -Dsonar.qualitygate.wait=true
 
   appSonarCloud:
