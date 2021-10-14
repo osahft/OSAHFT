@@ -3,6 +3,7 @@ package com.osahft.api.service;
 import com.osahft.api.entity.MailTransfer;
 import com.osahft.api.model.CreateMailTransferRequest;
 import com.osahft.api.model.CreateMailTransferResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,12 +13,13 @@ import java.util.LongSummaryStatistics;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class TransferService implements TransferServiceIF {
 
     // TODO implement this service, this is just an dummy implementation
     // TODO REMOVE WHEN IMPLEMENTING DB
     private final List<MailTransfer> createdTransfers = new LinkedList<>();
-    private static long availableId = 0;
+    private long availableId = 0;
 
 
     @Override
@@ -40,16 +42,15 @@ public class TransferService implements TransferServiceIF {
     @Override
     public void uploadFiles(Long mailTransferId, List<MultipartFile> files) {
         MailTransfer mailTransfer = createdTransfers.stream().filter(transfer -> transfer.getId().equals(mailTransferId)).findFirst().orElseThrow(RuntimeException::new);
-        System.out.println("Files could be matched to " + mailTransfer);
+        log.info("Files could be matched to" + mailTransfer);
         LongSummaryStatistics collect = files.stream().map(MultipartFile::getSize).collect(Collectors.summarizingLong(Long::longValue));
-        System.out.println("Total files size in byte:" + collect.getSum());
+        log.info("Total files size in byte:" + collect.getSum());
     }
 
     @Override
     public void completeMailTransfer(Long mailTransferId) {
         MailTransfer mailTransfer = createdTransfers.stream().filter(transfer -> transfer.getId().equals(mailTransferId)).findFirst().orElseThrow(RuntimeException::new);
         mailTransfer.setTriggered(true);
-        System.out.println("Set triggered of" + mailTransfer + "to true");
-
+        log.info("Set triggered of" + mailTransfer + "to true");
     }
 }

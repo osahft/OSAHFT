@@ -1,5 +1,9 @@
 package com.osahft.api.constant;
 
-public interface ApiConstants {
-    String API_VERSION = "v1";
+public class ApiConstants {
+
+    public static final String API_VERSION = "v1";
+
+    private ApiConstants() {
+    }
 }

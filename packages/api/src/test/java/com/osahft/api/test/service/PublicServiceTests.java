@@ -12,7 +12,7 @@ import static com.osahft.api.internal.assertion.Assertions.assertThat;
 
 
 @SpringBootTest
-public class PublicServiceTests {
+class PublicServiceTests {
     @Autowired
     private BuildProperties buildProperties;
 
