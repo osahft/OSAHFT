@@ -15,7 +15,7 @@
 	<description>Open Source Ad Hoc File Transfer API</description>
 	<properties>
 		<java.version>11</java.version>
-		<sonar.organization>osahft-org</sonar.organization>
+		<sonar.organization>osahft</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<packaging>jar</packaging>
