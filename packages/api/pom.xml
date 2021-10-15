@@ -44,14 +44,14 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>1.18.22</version>
         </dependency>
 
         <!--SWAGGER-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.5.10</version>
+            <version>1.5.11</version>
         </dependency>
 
         <!--DRACOON JAVA SDK-->
@@ -60,6 +60,14 @@
             <artifactId>dracoon-sdk</artifactId>
             <version>2.5.0</version>
         </dependency>
+
+        <!--GOOGLE GUAVA-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.0.1-jre</version>
+        </dependency>
+
     </dependencies>
 
     <build>
