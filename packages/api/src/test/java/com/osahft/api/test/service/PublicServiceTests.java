@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import static com.osahft.api.internal.assertion.Assertions.assertThat;
 
 
 @SpringBootTest
+@TestPropertySource(locations = "classpath:test.properties")
 public class PublicServiceTests {
     @Autowired
     private BuildProperties buildProperties;
