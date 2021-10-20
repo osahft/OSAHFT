@@ -38,5 +38,7 @@ public class MailTransfer implements Serializable {
 
     private Boolean triggered = false;
 
+    private long verificationCode;
+
 }
 
