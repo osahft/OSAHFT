@@ -1,12 +1,16 @@
 package com.osahft.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MailService implements MailServiceIF {
+
+    @Value("${spring.mail.username}")
+    private String mailSender;
 
     @Autowired
     private JavaMailSender emailSender;
@@ -22,7 +26,7 @@ public class MailService implements MailServiceIF {
     @Override
     public void sendVerificationCode(
             String to, long verificationCode) {
-        SimpleMailMessage message = createSimpleMail(to, "verification@osahft.de", "Your OSAHFT verification code");
+        SimpleMailMessage message = createSimpleMail(to, mailSender, "Your OSAHFT verification code");
         message.setText("Code to verify your identity to OSAHFT " + verificationCode);
         emailSender.send(message);
     }
