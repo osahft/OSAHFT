@@ -3,7 +3,7 @@ package com.osahft.api.service;
 import com.osahft.api.exception.MailTransferRepositoryException;
 
 public interface MailServiceIF {
-    void sendVerificationCode(String transferId) throws MailTransferRepositoryException;
+    void sendAuthenticationCode(String transferId) throws MailTransferRepositoryException;
 
     void sendDownloadLink(String transferId) throws MailTransferRepositoryException;
 

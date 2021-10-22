@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-import static java.awt.SystemColor.text;
 
 @Service
 public class MailService implements MailServiceIF {
@@ -41,7 +40,7 @@ public class MailService implements MailServiceIF {
     }
 
     @Override
-    public void sendVerificationCode(String transferId) throws MailTransferRepositoryException {
+    public void sendAuthenticationCode(String transferId) throws MailTransferRepositoryException {
         MailTransfer mailTransfer = findMailTransferById(transferId);
 
         SimpleMailMessage message = createSimpleMail(mailTransfer.getMailSender(), "Your OSAHFT verification code");
@@ -54,7 +53,7 @@ public class MailService implements MailServiceIF {
         MailTransfer mailTransfer = findMailTransferById(transferId);
         for (MailReceiverDownloadLinkMapping mapping : mailTransfer.getMailReceiverDownloadLinkMapping()) {
             SimpleMailMessage message = createSimpleMail(mapping.getMailReceiver(), mailTransfer.getMailSender() + " has sent you " + mailTransfer.getTitle() + " via OSAHFT");
-            message.setText(text + "\nDownload link: " + mapping.getDownloadLink());
+            message.setText(mailTransfer.getMessage() + "\nDownload link: " + mapping.getDownloadLink());
             emailSender.send(message);
         }
     }

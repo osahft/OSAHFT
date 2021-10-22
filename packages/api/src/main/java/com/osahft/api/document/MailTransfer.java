@@ -16,13 +16,19 @@ import java.util.concurrent.ThreadLocalRandom;
 @Document(indexName = "blog")
 public class MailTransfer {
 
+    public enum State {
+        STARTED,
+        TRIGGERED,
+        FINISHED
+    }
+
     @Builder
-    public MailTransfer(String mailSender, List<MailReceiverDownloadLinkMapping> mailReceiverDownloadLinkMapping, String title, String message, String fileDirectory) {
+    public MailTransfer(String mailSender, List<MailReceiverDownloadLinkMapping> mailReceiverDownloadLinkMapping, String title, String message, String dataDir) {
         this.mailSender = mailSender;
         this.mailReceiverDownloadLinkMapping = mailReceiverDownloadLinkMapping;
         this.title = title;
         this.message = message;
-        this.fileDirectory = fileDirectory;
+        this.dataDir = dataDir;
     }
 
     @Id
@@ -42,9 +48,11 @@ public class MailTransfer {
 
     private String message;
 
-    private String fileDirectory;
+    private String dataDir;
 
-    private Boolean triggered = false;
+    private Long containerId;
+
+    private State state = State.STARTED;
 
 }
 

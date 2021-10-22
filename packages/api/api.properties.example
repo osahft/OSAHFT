@@ -47,3 +47,8 @@ spring.mail.password=
 # Default: true
 # spring.mail.properties.mail.smtp.starttls.enable=
 
+# Data directory [String]
+# e.g. /srv/osahft/api/data
+data.dir=
+
+
