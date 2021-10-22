@@ -1,33 +1,27 @@
-package com.osahft.api.entity;
+package com.osahft.api.document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailTransfer implements Serializable {
+@Document(indexName = "blog")
+public class MailTransfer {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
-    private Long id;
+    private String id;
 
-    @NotNull
     private String mailSender;
 
-    @NotNull
     private List<String> mailReceivers;
 
     private String title;

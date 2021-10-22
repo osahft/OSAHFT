@@ -45,11 +45,11 @@ public class DracoonClientService implements FileServiceClientServiceIF {
     }
 
     @Override
-    public void uploadFiles(Long transferId) throws FileServiceClientException {
+    public void uploadFiles(String transferId) throws FileServiceClientException {
         try {
             // create container
             // room name == transferId
-            CreateRoomRequest createRoomRequest = new CreateRoomRequest.Builder(transferId.toString())
+            CreateRoomRequest createRoomRequest = new CreateRoomRequest.Builder(transferId)
                     .adminUserIds(Collections.singletonList(client.account().getUserAccount().getId()))
                     .build();
             Node room = client.nodes().createRoom(createRoomRequest);
@@ -98,7 +98,7 @@ public class DracoonClientService implements FileServiceClientServiceIF {
     }
 
     @Override
-    public List<String> createDownloadLinks(Long transferId) throws FileServiceClientException {
+    public List<String> createDownloadLinks(String transferId) throws FileServiceClientException {
         try {
             // TODO get receivers from DB and create for every one a share link
             // TODO use containerId as nodeId
@@ -116,7 +116,7 @@ public class DracoonClientService implements FileServiceClientServiceIF {
     }
 
     @Override
-    public void deleteFiles(Long transferId) throws FileServiceClientException {
+    public void deleteFiles(String transferId) throws FileServiceClientException {
         try {
             // TODO get roomId == containerId from DB
             // delete room to delete files in it as well

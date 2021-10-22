@@ -8,5 +8,5 @@ import lombok.NonNull;
 @Builder
 public class CreateMailTransferResponse {
     @NonNull
-    private long mailTransferId;
+    private String mailTransferId;
 }

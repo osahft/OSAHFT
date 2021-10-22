@@ -4,9 +4,24 @@
 file.service=
 
   # File service url [String]
-  # Note: url to file service e.g. https://dracoon.team
+  # e.g. https://dracoon.team
 file.service.url=
 
   # File service oauth access token [String]
   # Note: set an access token with period of validity like 10 years, otherwise file service communication will fail when token has expired
 file.service.oauth.access-token=
+
+  # Elasticsearch username [String]
+elasticsearch.username=
+
+  # Elasticsearch password [String]
+elasticsearch.password=
+
+  # Elasticsearch host [String]
+  # e.g. localhost
+elasticsearch.host=
+
+  # Elasticsearch port [Integer]
+  # e.g. 9200
+elasticsearch.port=
+
