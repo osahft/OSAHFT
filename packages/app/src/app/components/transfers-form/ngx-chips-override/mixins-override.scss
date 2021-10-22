@@ -3,7 +3,6 @@
   flex-direction: row;
   flex-wrap: wrap;
   position: relative;
-
   transition: map-get($theme, transition);
 
   padding: map-get($theme, 'container-padding');
