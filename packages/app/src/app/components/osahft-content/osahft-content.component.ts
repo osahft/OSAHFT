@@ -11,5 +11,4 @@ export class OsahftContentComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Types} from "../shared/types";
+import {Types} from "../../shared/types";
 import {HttpClient, HttpErrorResponse, HttpHeaders, } from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -52,7 +52,8 @@ export class TransfersService {
       // Get server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    window.alert(errorMessage);
+    //@TODO: pass error from here to toast service
+    console.log(errorMessage);
     return throwError(errorMessage);
   }
 

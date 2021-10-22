@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {AbstractControl} from "@angular/forms";
-import {TransfersService} from "../../service/transfers.service";
+import {TransfersService} from "../../services/transfers/transfers.service";
 import {Types} from "../../shared/types";
+import {ToastService} from "../../services/toast/toast.service";
 
 @Component({
   selector: 'app-transfers-form',
@@ -27,7 +28,7 @@ export class TransfersFormComponent implements OnInit {
 
   emailPattern: string = "^[A-Za-z0–9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
 
-  constructor(public transferService: TransfersService) { }
+  constructor(public transferService: TransfersService, public toastService: ToastService) { }
 
   ngOnInit(): void {
   }
@@ -63,7 +64,8 @@ export class TransfersFormComponent implements OnInit {
     console.log(this.receiverAddresses)
 
     if (!this.isInputValid()) {
-      console.log("Cannot start the transfer due to missing input")
+      const error = new Error("Cannot start the transfer due to missing input")
+      this.showError(error.message)
       return;
     }
 
@@ -91,6 +93,14 @@ export class TransfersFormComponent implements OnInit {
 
     // @TODO: do some fancy stuff on success, for now just log
     console.log("Mail Transfer completed", success);
+  }
+
+  showError(message: string) {
+    this.toastService.show(message, {
+      classname: 'bg-danger text-light',
+      delay: 5000,
+      autohide: true
+    });
   }
 
 }
