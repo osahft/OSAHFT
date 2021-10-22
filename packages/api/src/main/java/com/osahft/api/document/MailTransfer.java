@@ -1,28 +1,42 @@
 package com.osahft.api.document;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Document(indexName = "blog")
 public class MailTransfer {
 
+    @Builder
+    public MailTransfer(String mailSender, List<MailReceiverDownloadLinkMapping> mailReceiverDownloadLinkMapping, String title, String message, String fileDirectory) {
+        this.mailSender = mailSender;
+        this.mailReceiverDownloadLinkMapping = mailReceiverDownloadLinkMapping;
+        this.title = title;
+        this.message = message;
+        this.fileDirectory = fileDirectory;
+    }
 
     @Id
-    private String id;
+    private final String id = UUID.randomUUID().toString();
+
+    private final Integer authenticationCode = ThreadLocalRandom.current().nextInt(100000, 999999 + 1);
+
+    private final Date createdAt = new Date();
+
+    private Boolean isAuthenticated = false;
 
     private String mailSender;
 
-    private List<String> mailReceivers;
+    private List<MailReceiverDownloadLinkMapping> mailReceiverDownloadLinkMapping;
 
     private String title;
 
@@ -31,8 +45,6 @@ public class MailTransfer {
     private String fileDirectory;
 
     private Boolean triggered = false;
-
-    private long verificationCode;
 
 }
 

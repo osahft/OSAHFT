@@ -1,8 +1,11 @@
 package com.osahft.api.service;
 
-import com.osahft.api.entity.MailTransfer;
+import com.osahft.api.document.MailReceiverDownloadLinkMapping;
+import com.osahft.api.document.MailTransfer;
+import com.osahft.api.exception.MailTransferRepositoryException;
 import com.osahft.api.model.CreateMailTransferRequest;
 import com.osahft.api.model.CreateMailTransferResponse;
+import com.osahft.api.repository.MailTransferRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.LongSummaryStatistics;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,26 +23,37 @@ public class TransferService implements TransferServiceIF {
     // TODO implement this service, this is just an dummy implementation
     // TODO REMOVE WHEN IMPLEMENTING DB
     private final List<MailTransfer> createdTransfers = new LinkedList<>();
-    private static long availableId = 0;
 
     @Autowired
-    private MailService mailingService;
+    private MailService mailService;
+
+    @Autowired
+    private MailTransferRepository mailTransferRepository;
 
     @Override
     public CreateMailTransferResponse createNewMailTransfer(CreateMailTransferRequest createMailTransferRequest) {
 
-        long verificationCode = ThreadLocalRandom.current().nextInt(100000, 999999 + 1);
-
         MailTransfer mailTransfer = MailTransfer.builder()
-                .id(availableId++)
                 .mailSender(createMailTransferRequest.getMailSender())
-                .mailReceivers(createMailTransferRequest.getMailReceivers())
+                .mailReceiverDownloadLinkMapping(createMailTransferRequest
+                        .getMailReceivers()
+                        .stream()
+                        .map(receiver -> new MailReceiverDownloadLinkMapping(null, null, receiver))
+                        .collect(Collectors.toList()))
                 .title(createMailTransferRequest.getTitle())
                 .message(createMailTransferRequest.getMessage())
-                .verificationCode(verificationCode)
                 .build();
 
-        mailingService.sendVerificationCode(mailTransfer.getMailSender(), verificationCode);
+        mailTransferRepository.save(mailTransfer);
+
+        MailTransfer get = mailTransferRepository.findById(mailTransfer.getId()).get();
+
+
+        try {
+            mailService.sendVerificationCode(mailTransfer.getId());
+        } catch (MailTransferRepositoryException e) {
+            e.printStackTrace();
+        }
 
         createdTransfers.add(mailTransfer);
         return CreateMailTransferResponse.builder()

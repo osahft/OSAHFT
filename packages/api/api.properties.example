@@ -3,25 +3,47 @@
 # Note: currently only dracoon available
 file.service=
 
-  # File service url [String]
-  # e.g. https://dracoon.team
+# File service url [String]
+# e.g. https://dracoon.team
 file.service.url=
 
-  # File service oauth access token [String]
-  # Note: set an access token with period of validity like 10 years, otherwise file service communication will fail when token has expired
+# File service oauth access token [String]
+# Note: set an access token with period of validity like 10 years, otherwise file service communication will fail when token has expired
 file.service.oauth.access-token=
 
-  # Elasticsearch username [String]
+# Elasticsearch username [String]
 elasticsearch.username=
 
-  # Elasticsearch password [String]
+# Elasticsearch password [String]
 elasticsearch.password=
 
-  # Elasticsearch host [String]
-  # e.g. localhost
+# Elasticsearch host [String]
+# e.g. localhost
 elasticsearch.host=
 
-  # Elasticsearch port [Integer]
-  # e.g. 9200
+# Elasticsearch port [Integer]
+# e.g. 9200
 elasticsearch.port=
+
+# SMTP host [String]
+# e.g. smtp.example.org
+spring.mail.host=
+
+# SMTP port [Integer]
+# e.g. 587
+spring.mail.port=
+
+# SMTP username [String]
+spring.mail.username=
+
+# SMTP password [String]
+spring.mail.password=
+
+# SMTP auth [Boolean]
+# Default: true
+# spring.mail.properties.mail.smtp.auth=
+
+# SMTP tls [Boolean]
+# Default: true
+# spring.mail.properties.mail.smtp.starttls.enable=
 
