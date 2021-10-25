@@ -1,18 +1,6 @@
 <form>
   <div class="form-group">
-    <div class="custom-dropzone mb-3" ngx-dropzone [accept]="'*'" (change)="onSelect($event)">
-      <ngx-dropzone-label>
-        <div>
-          <p>Drop Files to Upload</p>
-          <small>Click Here To Open File Wizard, too.</small>
-        </div>
-      </ngx-dropzone-label>
-      <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f"
-                                  [removable]="true"
-                                  (removed)="onRemove(f)">
-        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-      </ngx-dropzone-image-preview>
-    </div>
+    <file-upload class="file-upload" [(ngModel)]="files" [animation]=false name="files">Upload dein Kaas</file-upload>
   </div>
 
   <div class="form-group">
@@ -61,12 +49,6 @@
 
     </tag-input>
     <div class="form-text">You can add more than one receiver for your files.</div>
-  </div>
-
-  <div class="form-group form-check">
-    <input type="checkbox" class="form-check-input" id="termsAndConditions"
-           (change)="isPrivacySelected=!isPrivacySelected">
-    <label class="form-check-label" for="termsAndConditions">Add some stuff about privacy and tac here.</label>
   </div>
 
   <button type="submit" class="btn btn-primary" (click)="transfer()">Transfer

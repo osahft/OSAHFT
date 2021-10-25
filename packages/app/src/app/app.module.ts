@@ -5,14 +5,13 @@ import {TagInputModule} from 'ngx-chips';
 import {AngularEditorModule} from '@kolkov/angular-editor';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
+import { FileUploadModule } from '@iplab/ngx-file-upload';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 // components
 import {AppComponent} from './app.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {NgxDropzoneModule} from 'ngx-dropzone';
 import {TransfersFormComponent} from './components/transfers-form/transfers-form.component';
 import {OsahftContentComponent} from './components/osahft-content/osahft-content.component';
 import {ToastComponent} from "./components/toast/toast.component";
-
 
 @NgModule({
   declarations: [
@@ -24,13 +23,13 @@ import {ToastComponent} from "./components/toast/toast.component";
   imports: [
     BrowserModule,
     NgbModule,
-    NgxDropzoneModule,
     FormsModule,
     ReactiveFormsModule,
     TagInputModule,
     AngularEditorModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    FileUploadModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

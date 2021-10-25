@@ -18,7 +18,6 @@ export class TransfersFormComponent implements OnInit {
   receiverAddresses: {label: string}[] = [];
   files: File[] = [];
 
-  isPrivacySelected: boolean = false;
   isTitleValid: boolean = false;
 
   errorMessages = {
@@ -33,17 +32,8 @@ export class TransfersFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSelect(event: any) {
-    this.files.push(...event.addedFiles);
-  }
-
-  onRemove(event: any) {
-    console.log(event);
-    this.files.splice(this.files.indexOf(event), 1);
-  }
-
   isInputValid() {
-    return this.isPrivacySelected && this.isTitleValid && this.receiverAddresses.length > 0 && this.senderAddress.length > 0 && this.files.length > 0;
+    return this.isTitleValid && this.receiverAddresses.length > 0 && this.senderAddress.length > 0 && this.files.length > 0;
   }
 
   checkPattern(control: AbstractControl) {

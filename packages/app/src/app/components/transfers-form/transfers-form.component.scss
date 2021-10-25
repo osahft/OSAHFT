@@ -1,14 +1,10 @@
 @import "osahft-theme";
 
-ngx-dropzone,
-.custom-dropzone {
-  height: 150px;
+file-upload,
+.file-upload {
   background: rgba(255, 255, 255, 0.5);
   border: 1px dashed #ccc;
-}
-
-.custom-dropzone.ngx-dz-hovered {
-  border: 1px solid rgb(235, 79, 79);
+  outline: rgba(255, 255, 255, 0.5);
 }
 
 .form-text {
