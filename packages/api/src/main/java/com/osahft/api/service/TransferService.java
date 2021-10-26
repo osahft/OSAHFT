@@ -124,5 +124,4 @@ public class TransferService implements TransferServiceIF {
             throw new TransferServiceException("Could not authenticate user due to invalid authenticationCode: " + authenticationCode);
     }
 
-
 }

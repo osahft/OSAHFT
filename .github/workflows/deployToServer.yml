@@ -1,0 +1,31 @@
+# This workflow uses several third-party actions to trigger deployment to server.
+#
+# Third-party actions used:
+# - distributhor/workflow-webhook@v2 | https://github.com/distributhor/workflow-webhook
+
+name: Trigger deployment to server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deployToServer:
+    name: Trigger deployment to server
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Generate timestamp for hook payload
+        id: timestamp
+        run: |
+          echo "::set-output name=timestamp::$(date +'%Y-%m-%d_%H-%M-%S')"
+
+      - name: Invoke deployment hook
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_type: json-extended
+          webhook_url: '${{ secrets.WEBHOOK_URL }}'
+          webhook_secret: '${{ secrets.WEBHOOK_SECRET }}'
+          data: '{ "timestamp": "${{ steps.timestamp.outputs.timestamp }}" }'
