@@ -41,7 +41,7 @@ public class TransferService implements TransferServiceIF {
 
     private MailTransfer getMailTransfer(String mailTransferId) throws MailTransferRepositoryException {
         return mailTransferRepository.findById(mailTransferId)
-                .orElseThrow(() -> new MailTransferRepositoryException("Could not find MailTransfer with id:" + mailTransferId));
+                .orElseThrow(() -> new MailTransferRepositoryException(mailTransferId));
     }
 
     private void checkAuthentication(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {

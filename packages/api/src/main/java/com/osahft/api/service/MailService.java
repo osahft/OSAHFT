@@ -36,7 +36,7 @@ public class MailService implements MailServiceIF {
     private MailTransfer findMailTransferById(String transferId) throws MailTransferRepositoryException {
         return mailTransferRepository
                 .findById(transferId)
-                .orElseThrow(() -> new MailTransferRepositoryException("Could not find MailTransfer with id:" + transferId));
+                .orElseThrow(() -> new MailTransferRepositoryException(transferId));
     }
 
     @Override

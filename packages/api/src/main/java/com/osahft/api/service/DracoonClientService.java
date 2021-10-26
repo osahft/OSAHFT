@@ -41,7 +41,7 @@ public class DracoonClientService implements FileServiceClientServiceIF {
 
     private MailTransfer getMailTransfer(String transferId) throws MailTransferRepositoryException {
         return mailTransferRepository
-                .findById(transferId).orElseThrow(() -> new MailTransferRepositoryException("Could not find MailTransfer with id:" + transferId));
+                .findById(transferId).orElseThrow(() -> new MailTransferRepositoryException(transferId));
     }
 
     @PostConstruct
