@@ -9,6 +9,7 @@ import com.osahft.api.document.MailReceiverDownloadLinkMapping;
 import com.osahft.api.document.MailTransfer;
 import com.osahft.api.exception.FileServiceClientServiceException;
 import com.osahft.api.exception.MailTransferRepositoryException;
+import com.osahft.api.helper.ErrorHelper;
 import com.osahft.api.repository.MailTransferRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +107,7 @@ public class DracoonClientService implements FileServiceClientServiceIF {
             }
 
         } catch (Exception e) {
-            throw new FileServiceClientServiceException("Couldn't create room or upload files to DRACOON-API.", e);
+            throw new FileServiceClientServiceException(ErrorHelper.getSERVICE_UNAVAILABLE("Couldn't create room or upload files to DRACOON-API."), e);
         }
     }
 

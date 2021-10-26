@@ -14,7 +14,6 @@ public class FileServiceConfiguration {
     @Value("${file.service}")
     private String fileService;
 
-    // TODO remove runtimeexception
     @Bean("FileServiceClientServiceIF")
     public FileServiceClientServiceIF createFileServiceClientService() throws FileServiceException {
         if (fileService.equalsIgnoreCase("dracoon")) {

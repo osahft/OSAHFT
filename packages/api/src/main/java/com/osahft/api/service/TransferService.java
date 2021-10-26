@@ -5,6 +5,7 @@ import com.osahft.api.document.MailTransfer;
 import com.osahft.api.exception.LocalFileStorageServiceException;
 import com.osahft.api.exception.MailTransferRepositoryException;
 import com.osahft.api.exception.TransferServiceException;
+import com.osahft.api.helper.ErrorHelper;
 import com.osahft.api.model.CreateMailTransferRequest;
 import com.osahft.api.model.CreateMailTransferResponse;
 import com.osahft.api.repository.MailTransferRepository;
@@ -46,7 +47,7 @@ public class TransferService implements TransferServiceIF {
 
     private void checkAuthentication(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {
         if (!getMailTransfer(mailTransferId).getIsAuthenticated())
-            throw new TransferServiceException("User is not authorized. Please authenticate user first.");
+            throw new TransferServiceException(ErrorHelper.getUNAUTHORIZED());
     }
 
     @Override
@@ -121,7 +122,7 @@ public class TransferService implements TransferServiceIF {
             mailTransfer.setIsAuthenticated(true);
             mailTransferRepository.save(mailTransfer);
         } else
-            throw new TransferServiceException("Could not authorize user due to invalid authenticationCode: " + authenticationCode);
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("Could not authorize user due to invalid authenticationCode: " + authenticationCode));
     }
 
 }

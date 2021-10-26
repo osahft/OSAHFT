@@ -3,6 +3,7 @@ package com.osahft.api.service;
 import com.osahft.api.document.MailTransfer;
 import com.osahft.api.exception.LocalFileStorageServiceException;
 import com.osahft.api.exception.MailTransferRepositoryException;
+import com.osahft.api.helper.ErrorHelper;
 import com.osahft.api.repository.MailTransferRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class LocalFileStorageService implements LocalFileStorageServiceIF {
             try {
                 Files.copy(file.getInputStream(), dataDir.resolve(Objects.requireNonNull(file.getOriginalFilename())));
             } catch (Exception e) {
-                throw new LocalFileStorageServiceException("File " + file.getOriginalFilename() + " could not be stored.", e);
+                throw new LocalFileStorageServiceException(ErrorHelper.getSERVICE_UNAVAILABLE("File " + file.getOriginalFilename() + " could not be stored."), e);
             }
         }
     }

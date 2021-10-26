@@ -1,19 +1,18 @@
 package com.osahft.api.model;
 
-import com.osahft.api.constant.ErrorConstants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class ErrorResponse {
-    public String code;
-    public String message;
+    private String code;
+    private String message;
+    @JsonIgnore
+    private HttpStatus httpStatus;
 
-    public ErrorResponse(ErrorConstants error) {
-        this.code = error.getCode();
-        this.message = error.getMessage();
-    }
 }
