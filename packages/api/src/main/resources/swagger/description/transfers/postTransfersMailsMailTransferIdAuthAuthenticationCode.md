@@ -1,6 +1,6 @@
 ## Description
 
-This endpoint uploads files for a mail transfer.
+This endpoint authenticates the user for a mail transfer.
 
 ## Precondition:
 
@@ -8,7 +8,7 @@ Valid mail transfer ID.
 
 ## Postcondition:
 
-Files are uploaded and added to mail transfer.
+User is authenticated for a mail transfer.
 
 ## Further Information:
 

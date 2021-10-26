@@ -1,5 +1,6 @@
 package com.osahft.api.plugin;
 
+import com.google.common.io.Resources;
 import io.swagger.v3.oas.models.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -9,13 +10,11 @@ import org.springframework.web.method.HandlerMethod;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 
 @Slf4j
 @Component
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"UnstableApiUsage"})
 public class ApiDescriptionPlugin implements OperationCustomizer {
 
     private static final String DESCRIPTION_BASE_PATH = "swagger/description/";
@@ -29,8 +28,8 @@ public class ApiDescriptionPlugin implements OperationCustomizer {
             return operation;
         }
         try {
-            URL resource = getClass().getClassLoader().getResource(descriptionPath);
-            operation.setDescription(Files.readString(Paths.get(resource.toURI()), StandardCharsets.UTF_8));
+            URL resource = Resources.getResource(descriptionPath);
+            operation.setDescription(Resources.toString(resource, StandardCharsets.UTF_8));
         } catch (Exception e) {
             log.warn("Documentation file '{}' for API '{}' not found.", descriptionPath, operation.getOperationId());
         }
