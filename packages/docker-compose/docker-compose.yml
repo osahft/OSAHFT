@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   api:
-    image: ghcr.io/bastianbeier/osahft-api:0.0.1-snapshot
+    image: ghcr.io/osahft/osahft-api:0.0.1-snapshot
     container_name: osahft-api
     volumes:
       - type: bind
@@ -45,7 +45,7 @@ services:
       - elasticsearch
 
   app:
-    image: ghcr.io/bastianbeier/osahft-app:0.0.1-snapshot
+    image: ghcr.io/osahft/osahft-app:0.0.1-snapshot
     container_name: osahft-app
     networks:
       - osahft

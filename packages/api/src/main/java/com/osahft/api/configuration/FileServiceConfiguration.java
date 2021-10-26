@@ -1,6 +1,7 @@
 package com.osahft.api.configuration;
 
 
+import com.osahft.api.exception.FileServiceException;
 import com.osahft.api.service.DracoonClientService;
 import com.osahft.api.service.FileServiceClientServiceIF;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +16,11 @@ public class FileServiceConfiguration {
 
     // TODO remove runtimeexception
     @Bean("FileServiceClientServiceIF")
-    public FileServiceClientServiceIF createFileServiceClientService() {
+    public FileServiceClientServiceIF createFileServiceClientService() throws FileServiceException {
         if (fileService.equalsIgnoreCase("dracoon")) {
             return new DracoonClientService();
         } else {
-            throw new RuntimeException("Unsupported value for property file.service: " + fileService);
+            throw new FileServiceException("Unsupported value for property file.service: " + fileService);
         }
     }
 

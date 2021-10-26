@@ -26,19 +26,19 @@ import java.util.Objects;
 public class LocalFileStorageService implements LocalFileStorageServiceIF {
 
     @Value("${data.dir}")
-    private String dataDir;
+    private String rootDataDir;
 
     @Autowired
     private MailTransferRepository mailTransferRepository;
 
     private Path getDataDir(String transferId) throws MailTransferRepositoryException {
         return Paths.get(mailTransferRepository
-                .findById(transferId).orElseThrow(() -> new MailTransferRepositoryException("Could not find MailTransfer with id:" + transferId)).getDataDir());
+                .findById(transferId).orElseThrow(() -> new MailTransferRepositoryException(transferId)).getDataDir());
     }
 
     @Override
     public void createStorage(String transferId) throws MailTransferRepositoryException {
-        File dataDir = new File(this.dataDir, transferId);
+        File dataDir = new File(this.rootDataDir, transferId);
         if (!dataDir.exists()) {
             log.info("data.dir {} does not exist. Creating data.dir", dataDir.getAbsolutePath());
             if (!dataDir.mkdirs())
@@ -46,7 +46,7 @@ public class LocalFileStorageService implements LocalFileStorageServiceIF {
             else {
                 // store files directory
                 MailTransfer mailTransfer = mailTransferRepository.findById(transferId)
-                        .orElseThrow(() -> new MailTransferRepositoryException("Could not find MailTransfer with id:" + transferId));
+                        .orElseThrow(() -> new MailTransferRepositoryException(transferId));
                 mailTransfer.setDataDir(dataDir.getAbsolutePath());
                 mailTransferRepository.save(mailTransfer);
             }
@@ -80,7 +80,7 @@ public class LocalFileStorageService implements LocalFileStorageServiceIF {
     @Override
     public void deleteStorage(String transferId) throws MailTransferRepositoryException, LocalFileStorageServiceException {
         MailTransfer mailTransfer = mailTransferRepository
-                .findById(transferId).orElseThrow(() -> new MailTransferRepositoryException("Could not find MailTransfer with id:" + transferId));
+                .findById(transferId).orElseThrow(() -> new MailTransferRepositoryException(transferId));
         if (mailTransfer.getDataDir() != null) {
             Path dataDir = Paths.get(mailTransfer.getDataDir());
             try {
