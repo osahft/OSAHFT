@@ -46,7 +46,7 @@ public class TransferService implements TransferServiceIF {
 
     private void checkAuthentication(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {
         if (!getMailTransfer(mailTransferId).getIsAuthenticated())
-            throw new TransferServiceException("User is not authenticated. Please authenticate user first.");
+            throw new TransferServiceException("User is not authorized. Please authenticate user first.");
     }
 
     @Override
@@ -115,13 +115,13 @@ public class TransferService implements TransferServiceIF {
     }
 
     @Override
-    public void authenticateUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
+    public void authorizeUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
         MailTransfer mailTransfer = getMailTransfer(mailTransferId);
         if (mailTransfer.getAuthenticationCode().equals(authenticationCode)) {
             mailTransfer.setIsAuthenticated(true);
             mailTransferRepository.save(mailTransfer);
         } else
-            throw new TransferServiceException("Could not authenticate user due to invalid authenticationCode: " + authenticationCode);
+            throw new TransferServiceException("Could not authorize user due to invalid authenticationCode: " + authenticationCode);
     }
 
 

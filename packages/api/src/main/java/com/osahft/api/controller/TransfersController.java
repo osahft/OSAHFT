@@ -52,7 +52,7 @@ public class TransfersController {
     @PostMapping(value = "/mails/{mail_transfer_id}/auth/{authentication_code}")
     @ResponseStatus(HttpStatus.OK)
     public void authenticateUser(@PathVariable("mail_transfer_id") String mailTransferId, @PathVariable("authentication_code") Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
-        transferService.authenticateUser(mailTransferId, authenticationCode);
+        transferService.authorizeUser(mailTransferId, authenticationCode);
     }
 
 }
