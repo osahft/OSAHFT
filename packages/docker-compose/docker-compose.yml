@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   api:
-    image: ghcr.io/bastianbeier/osahft-api:0.0.1-snapshot
+    image: ghcr.io/osahft/osahft-api:0.0.1-snapshot
     container_name: osahft-api
     volumes:
       - type: bind
@@ -10,30 +10,52 @@ services:
         target: /etc/osahft/api.properties
     networks:
       - osahft
-      - osahft_couchdb
+      - osahft_db
     ports:
       - "8080:8080"
-  db:
-    image: couchdb:3.1.1
-    container_name: osahft-couchdb
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: elasticsearch:7.14.2
+    container_name: osahft-elasticsearch
     environment:
-      - COUCHDB_USER=${COUCHDB_USER}
-      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+      - "discovery.type=single-node"
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - xpack.security.enabled=true
     networks:
-      - osahft_couchdb
+      - osahft_db
     ports:
-      - "5984:5984"
+      - "9200:9200"
+
+  kibana:
+    image: kibana:7.14.2
+    container_name: osahft-kibana
+    networks:
+      - osahft_db
+    environment:
+      - ELASTICSEARCH_URL=http://osahft-elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://osahft-elasticsearch:9200
+      - XPACK_SECURITY_ENABLED=true
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
 
   app:
-    image: ghcr.io/bastianbeier/osahft-app:0.0.1-snapshot
+    image: ghcr.io/osahft/osahft-app:0.0.1-snapshot
     container_name: osahft-app
     networks:
       - osahft
     ports:
       - "80:80"
+    depends_on:
+      - api
 
 networks:
   osahft:
     driver: bridge
-  osahft_couchdb:
+  osahft_db:
     driver: bridge
