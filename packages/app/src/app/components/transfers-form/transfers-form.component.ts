@@ -74,15 +74,17 @@ export class TransfersFormComponent implements OnInit {
     //@TODO: error handling for service
     const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody).toPromise();
     if(!!transferResponse) console.log("Mail Transfer created");
-    let success = await this.transferService.uploadFiles(transferResponse.mailTransferId, formData).toPromise();
-
-    if(success) {
-      console.log("Files uploaded", success);
-      success = await this.transferService.completeMailTransfer(transferResponse.mailTransferId).toPromise();
-    }
-
-    // @TODO: do some fancy stuff on success, for now just log
-    console.log("Mail Transfer completed", success);
+    const foo = await this.transferService.authenticateUser(transferResponse.mailTransferId, "1234").toPromise();
+    console.log(foo);
+    // let success = await this.transferService.uploadFiles(transferResponse.mailTransferId, formData).toPromise();
+    //
+    // if(success) {
+    //   console.log("Files uploaded", success);
+    //   success = await this.transferService.completeMailTransfer(transferResponse.mailTransferId).toPromise();
+    // }
+    //
+    // // @TODO: do some fancy stuff on success, for now just log
+    // console.log("Mail Transfer completed", success);
   }
 
   showError(message: string) {

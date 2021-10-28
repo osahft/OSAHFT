@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Types} from "../../shared/types";
-import {HttpClient, HttpErrorResponse, HttpHeaders, } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders,} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
@@ -10,8 +10,8 @@ import {catchError} from 'rxjs/operators';
 export class TransfersService {
 
   // @TODO: dynamic api url; move this to a constants.ts file in /app/shared
-  API_URL = 'http://localhost:8080/api';
-  TRANSFERS = '/v1/transfers/mails';
+  API_URL = 'http://localhost:8080/api/v1';
+  TRANSFERS = '/transfers/mails';
   UPLOADS = '/uploads';
 
   constructor(private http: HttpClient) {
@@ -30,17 +30,22 @@ export class TransfersService {
       )
   }
 
-  completeMailTransfer(mailTransferId: string): Observable<boolean> {
-    const idParam = `/${mailTransferId}`
-    return this.http.put<any>(`${this.API_URL}${this.TRANSFERS}${idParam}`, {})
+  completeMailTransfer(mailTransferId: string): Observable<any> {
+    const idParam = `/${mailTransferId}`;
+    return this.http.put<any>(`${this.API_URL}${this.TRANSFERS}${idParam}`, {}, {observe: 'response'})
       .pipe(
         catchError(this.handleError)
       )
   }
 
   uploadFiles(mailTransferId: string, files: FormData): Observable<boolean> {
-    const idParam = `/${mailTransferId}`
+    const idParam = `/${mailTransferId}`;
     return this.http.post<any>(`${this.API_URL}${this.TRANSFERS}${idParam}${this.UPLOADS}`, files)
+  }
+
+  authenticateUser(mailTransferId: string, authToken: string): Observable<any> {
+    const params = `/${mailTransferId}/auth/${authToken}`;
+    return this.http.post<any>(`${this.API_URL}${this.TRANSFERS}${params}`, {}, {observe: 'response'})
   }
 
   handleError(error: HttpErrorResponse) {
