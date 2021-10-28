@@ -51,9 +51,36 @@
     <div class="form-text">You can add more than one receiver for your files.</div>
   </div>
 
-  <button type="submit" class="btn btn-primary" (click)="transfer()">Transfer
+  <button type="submit" class="btn btn-primary" (click)="initTransfer()">Transfer
   </button>
 </form>
 
-<button class="btn btn-danger" (click)="showError('I am the error now!')">Error toast</button>&nbsp;
+<!-- <button class="btn btn-danger" (click)="showError('I am the error now!')">Error toast</button> -->
+
 <app-toasts></app-toasts>
+
+<ng-template #tokenPopup let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Verify your transfer</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>We have send a verification token to your email address <strong>{{senderAddress}}</strong>. Please check your email account and fill in the token below to finish your transfer.</p>
+    <form>
+      <div class="form-group">
+        <label for="token">Enter token</label>
+        <div class="input-group">
+          <input id="token" [(ngModel)]="token" name="token" [required]=true class="form-control" ngbAutofocus>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="verifyTransfer()">Save</button>
+  </div>
+</ng-template>
+
+<!-- <button class="btn btn-lg btn-outline-primary" (click)="openModal(tokenPopup)">Launch demo modal</button> -->
+

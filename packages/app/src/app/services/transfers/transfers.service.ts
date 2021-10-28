@@ -38,9 +38,9 @@ export class TransfersService {
       )
   }
 
-  uploadFiles(mailTransferId: string, files: FormData): Observable<boolean> {
+  uploadFiles(mailTransferId: string, files: FormData): Observable<any> {
     const idParam = `/${mailTransferId}`;
-    return this.http.post<any>(`${this.API_URL}${this.TRANSFERS}${idParam}${this.UPLOADS}`, files)
+    return this.http.post<any>(`${this.API_URL}${this.TRANSFERS}${idParam}${this.UPLOADS}`, files, {observe: 'response'})
   }
 
   authenticateUser(mailTransferId: string, authToken: string): Observable<any> {

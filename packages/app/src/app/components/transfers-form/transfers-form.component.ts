@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {AbstractControl} from "@angular/forms";
 import {TransfersService} from "../../services/transfers/transfers.service";
 import {Types} from "../../shared/types";
 import {ToastService} from "../../services/toast/toast.service";
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-transfers-form',
@@ -15,8 +16,11 @@ export class TransfersFormComponent implements OnInit {
   mailTitle: string = '';
   messageBody: string = '';
   senderAddress: string = '';
-  receiverAddresses: {label: string}[] = [];
+  receiverAddresses: { label: string }[] = [];
   files: File[] = [];
+  modalReference: any;
+  token: string = '';
+  mailTransferId: string = '';
 
   isTitleValid: boolean = false;
 
@@ -27,7 +31,16 @@ export class TransfersFormComponent implements OnInit {
 
   emailPattern: string = "^[A-Za-z0–9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
 
-  constructor(public transferService: TransfersService, public toastService: ToastService) { }
+
+  // @ts-ignore
+  @ViewChild('tokenPopup') private tokenPopup: TemplateRef<NgbModal>;
+
+  constructor(
+    public transferService: TransfersService,
+    public toastService: ToastService,
+    private modalService: NgbModal
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -46,18 +59,18 @@ export class TransfersFormComponent implements OnInit {
     return null;
   }
 
-  async transfer() {
-    console.log(this.files)
-    console.log(this.mailTitle)
-    console.log(this.messageBody)
-    console.log(this.senderAddress)
-    console.log(this.receiverAddresses)
-
+  async initTransfer() {
     if (!this.isInputValid()) {
       const error = new Error("Cannot start the transfer due to missing input")
       this.showError(error.message)
       return;
     }
+
+    console.log(this.files)
+    console.log(this.mailTitle)
+    console.log(this.messageBody)
+    console.log(this.senderAddress)
+    console.log(this.receiverAddresses)
 
     const requestBody: Types.CreateMailTransferRequest = {
       "mailSender": this.senderAddress,
@@ -66,28 +79,17 @@ export class TransfersFormComponent implements OnInit {
       "message": this.messageBody
     }
 
-    const formData = new FormData();
-    for (const f of this.files) {
-      formData.append("files", f, f.name);
-    }
-
     //@TODO: error handling for service
     const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody).toPromise();
-    if(!!transferResponse) console.log("Mail Transfer created");
-    const foo = await this.transferService.authenticateUser(transferResponse.mailTransferId, "1234").toPromise();
-    console.log(foo);
-    // let success = await this.transferService.uploadFiles(transferResponse.mailTransferId, formData).toPromise();
-    //
-    // if(success) {
-    //   console.log("Files uploaded", success);
-    //   success = await this.transferService.completeMailTransfer(transferResponse.mailTransferId).toPromise();
-    // }
-    //
-    // // @TODO: do some fancy stuff on success, for now just log
-    // console.log("Mail Transfer completed", success);
+    if (!!transferResponse) {
+      console.log("Mail Transfer created", transferResponse);
+      this.mailTransferId = transferResponse.mailTransferId;
+    }
+
+    this.openModal(this.tokenPopup);
   }
 
-  showError(message: string) {
+  private showError(message: string) {
     this.toastService.show(message, {
       classname: 'bg-danger text-light',
       delay: 5000,
@@ -95,4 +97,46 @@ export class TransfersFormComponent implements OnInit {
     });
   }
 
+  private showSuccess(message: string) {
+    this.toastService.show(message, {
+      classname: 'bg-success text-light',
+      delay: 5000,
+      autohide: true
+    });
+  }
+
+  private openModal(content: any) {
+    this.modalReference = this.modalService.open(content);
+    this.modalReference.result.then((result: any) => {
+      console.log(`Closed with: ${result}`)
+    })
+  }
+
+  async verifyTransfer() {
+    console.log("Token:", this.token);
+
+    const foo = await this.transferService.authenticateUser(this.mailTransferId, this.token).toPromise();
+    console.log(foo);
+
+    const formData = new FormData();
+    for (const f of this.files) {
+      formData.append("files", f, f.name);
+    }
+
+    let success = await this.transferService.uploadFiles(this.mailTransferId, formData).toPromise();
+
+    if (!!success) {
+      console.log("Files uploaded", success);
+      success = await this.transferService.completeMailTransfer(this.mailTransferId).toPromise();
+    }
+
+    // // @TODO: do some fancy stuff on success, for now just log
+    if (!!success) {
+      console.log("Mail Transfer completed", success);
+      this.showSuccess("Files sent successfully!");
+    }
+
+    if (!!this.modalReference && !!success) this.modalReference.close();
+    this.token = '';
+  }
 }
