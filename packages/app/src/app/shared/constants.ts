@@ -1,6 +1,8 @@
 export namespace Constants {
   export enum Paths {
-    API_URL = 'http://localhost:8080/api/v1',
+    BASEURL_LOCAL= 'http://localhost:8080',
+    BASEURL_SERVER = 'http://osahft.ddnss.de:8080',
+    API = '/api/v1',
     TRANSFERS = '/transfers/mails',
     UPLOADS = '/uploads',
     AUTH = '/auth'

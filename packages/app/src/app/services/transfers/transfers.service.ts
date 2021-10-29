@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, isDevMode} from '@angular/core';
 import {Constants} from "../../shared/constants";
 import {Types} from "../../shared/types";
 import {HttpClient, HttpErrorResponse, HttpHeaders,} from '@angular/common/http';
@@ -9,8 +9,13 @@ import {ToastService} from "../toast/toast.service";
 @Injectable()
 export class TransfersService {
 
-  constructor(private http: HttpClient, private toastService: ToastService) {
+  BASE_URL: string = Constants.Paths.BASEURL_LOCAL;
 
+  constructor(private http: HttpClient, private toastService: ToastService) {
+    // intentional empty function body
+    if(!isDevMode()) {
+      this.BASE_URL = Constants.Paths.BASEURL_SERVER
+    }
   }
 
   /**
@@ -18,7 +23,8 @@ export class TransfersService {
    * @param mailTransferRequest
    */
   createMailTransfer(mailTransferRequest: Types.CreateMailTransferRequest): Observable<Types.CreateMailTransferResponse> {
-    return this.http.post<Types.CreateMailTransferResponse>(`${Constants.Paths.API_URL}${Constants.Paths.TRANSFERS}`, mailTransferRequest, {
+    console.log(this.BASE_URL);
+    return this.http.post<Types.CreateMailTransferResponse>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}`, mailTransferRequest, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
@@ -34,7 +40,7 @@ export class TransfersService {
    */
   completeMailTransfer(mailTransferId: string): Observable<any> {
     const idParam = `/${mailTransferId}`;
-    return this.http.put<any>(`${Constants.Paths.API_URL}${Constants.Paths.TRANSFERS}${idParam}`, {},
+    return this.http.put<any>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}${idParam}`, {},
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
@@ -54,7 +60,7 @@ export class TransfersService {
    */
   uploadFiles(mailTransferId: string, files: FormData): Observable<any> {
     const idParam = `/${mailTransferId}`;
-    return this.http.post<any>(`${Constants.Paths.API_URL}${Constants.Paths.TRANSFERS}${idParam}${Constants.Paths.UPLOADS}`, files, {observe: 'response'})
+    return this.http.post<any>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}${idParam}${Constants.Paths.UPLOADS}`, files, {observe: 'response'})
       .pipe(
         catchError(this.handleError)
       )
@@ -67,7 +73,7 @@ export class TransfersService {
    */
   authenticateUser(mailTransferId: string, authToken: string): Observable<any> {
     const path = `/${mailTransferId}${Constants.Paths.AUTH}/${authToken}`;
-    return this.http.post<any>(`${Constants.Paths.API_URL}${Constants.Paths.TRANSFERS}${path}`, {}, {observe: 'response'})
+    return this.http.post<any>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}${path}`, {}, {observe: 'response'})
       .pipe(
         catchError(this.handleError)
       )
