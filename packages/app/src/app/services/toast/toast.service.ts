@@ -1,6 +1,6 @@
 import {Injectable, TemplateRef} from '@angular/core';
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class ToastService {
   toasts: any[] = [];
 

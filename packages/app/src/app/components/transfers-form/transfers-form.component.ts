@@ -36,20 +36,21 @@ export class TransfersFormComponent implements OnInit {
   @ViewChild('tokenPopup') private tokenPopup: TemplateRef<NgbModal>;
 
   constructor(
-    public transferService: TransfersService,
-    public toastService: ToastService,
+    private transferService: TransfersService,
+    private toastService: ToastService,
     private modalService: NgbModal
   ) {
+    console.log(transferService, toastService, modalService);
   }
 
   ngOnInit(): void {
   }
 
-  isInputValid() {
+  private isInputValid() {
     return this.isTitleValid && this.receiverAddresses.length > 0 && this.senderAddress.length > 0 && this.files.length > 0;
   }
 
-  checkPattern(control: AbstractControl) {
+  private checkPattern(control: AbstractControl) {
     const patternRegex = /^[A-Za-z0–9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/;
     if (patternRegex.test(control.value)) {
       console.log("Match exists.");
@@ -66,11 +67,11 @@ export class TransfersFormComponent implements OnInit {
       return;
     }
 
-    console.log(this.files)
-    console.log(this.mailTitle)
-    console.log(this.messageBody)
-    console.log(this.senderAddress)
-    console.log(this.receiverAddresses)
+    // console.log(this.files)
+    // console.log(this.mailTitle)
+    // console.log(this.messageBody)
+    // console.log(this.senderAddress)
+    // console.log(this.receiverAddresses)
 
     const requestBody: Types.CreateMailTransferRequest = {
       "mailSender": this.senderAddress,
@@ -79,7 +80,7 @@ export class TransfersFormComponent implements OnInit {
       "message": this.messageBody
     }
 
-    //@TODO: error handling for service
+    // @ts-ignore
     const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody).toPromise();
     if (!!transferResponse) {
       console.log("Mail Transfer created", transferResponse);
@@ -92,7 +93,7 @@ export class TransfersFormComponent implements OnInit {
   private showError(message: string) {
     this.toastService.show(message, {
       classname: 'bg-danger text-light',
-      delay: 5000,
+      delay: 7500,
       autohide: true
     });
   }
@@ -100,7 +101,7 @@ export class TransfersFormComponent implements OnInit {
   private showSuccess(message: string) {
     this.toastService.show(message, {
       classname: 'bg-success text-light',
-      delay: 5000,
+      delay: 7500,
       autohide: true
     });
   }
@@ -115,8 +116,8 @@ export class TransfersFormComponent implements OnInit {
   async verifyTransfer() {
     console.log("Token:", this.token);
 
-    const foo = await this.transferService.authenticateUser(this.mailTransferId, this.token).toPromise();
-    console.log(foo);
+    const auth = await this.transferService.authenticateUser(this.mailTransferId, this.token).toPromise();
+    if (!!auth) console.log("Authenticated!", auth);
 
     const formData = new FormData();
     for (const f of this.files) {
@@ -130,13 +131,16 @@ export class TransfersFormComponent implements OnInit {
       success = await this.transferService.completeMailTransfer(this.mailTransferId).toPromise();
     }
 
-    // // @TODO: do some fancy stuff on success, for now just log
     if (!!success) {
       console.log("Mail Transfer completed", success);
       this.showSuccess("Files sent successfully!");
     }
 
-    if (!!this.modalReference && !!success) this.modalReference.close();
-    this.token = '';
+    if (!!this.modalReference && !!success) {
+      this.modalReference.close();
+      // clear token input on modal close
+      this.token = '';
+    }
+
   }
 }

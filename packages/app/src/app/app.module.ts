@@ -12,6 +12,8 @@ import {AppComponent} from './app.component';
 import {TransfersFormComponent} from './components/transfers-form/transfers-form.component';
 import {OsahftContentComponent} from './components/osahft-content/osahft-content.component';
 import {ToastComponent} from "./components/toast/toast.component";
+import {ToastService} from "./services/toast/toast.service";
+import {TransfersService} from "./services/transfers/transfers.service";
 
 @NgModule({
   declarations: [
@@ -31,7 +33,7 @@ import {ToastComponent} from "./components/toast/toast.component";
     HttpClientModule,
     FileUploadModule,
   ],
-  providers: [],
+  providers: [ToastService, TransfersService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
