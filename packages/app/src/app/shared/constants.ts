@@ -5,4 +5,9 @@ export namespace Constants {
     UPLOADS = '/uploads',
     AUTH = '/auth'
   }
+
+  export enum ToastTypes {
+    ERROR = 'bg-danger',
+    SUCCESS = 'bg-success'
+  }
 }
