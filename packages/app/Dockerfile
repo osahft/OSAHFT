@@ -15,7 +15,7 @@ RUN npm install -g @angular/cli@12.2.5
 COPY . /app
 
 # generate build
-RUN ng build --output-path=dist
+RUN ng build --configuration production --output-path=dist
 
 #############
 ### serve ###
