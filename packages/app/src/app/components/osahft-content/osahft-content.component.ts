@@ -7,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OsahftContentComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    // intentional empty function body
+  }
 
   ngOnInit(): void {
+    // intentional empty function body
   }
 }

@@ -41,10 +41,11 @@ export class TransfersFormComponent implements OnInit {
     private toastService: ToastService,
     private modalService: NgbModal
   ) {
-    console.log(transferService, toastService, modalService);
+    // intentional empty function body
   }
 
   ngOnInit(): void {
+    // intentional empty function body
   }
 
 

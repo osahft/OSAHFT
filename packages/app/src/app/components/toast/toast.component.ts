@@ -22,7 +22,9 @@ import {ToastService} from "../../services/toast/toast.service";
   host: {'[class.ngb-toasts]': 'true'}
 })
 export class ToastComponent {
-  constructor(public toastService: ToastService) {}
+  constructor(public toastService: ToastService) {
+    // intentional empty function body
+  }
 
   isTemplate(toast: { textOrTpl: any; }) { return toast.textOrTpl instanceof TemplateRef; }
 }
