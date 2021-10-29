@@ -1,4 +1,4 @@
-import {Injectable, Injector} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Constants} from "../../shared/constants";
 import {Types} from "../../shared/types";
 import {HttpClient, HttpErrorResponse, HttpHeaders,} from '@angular/common/http';
@@ -9,7 +9,7 @@ import {ToastService} from "../toast/toast.service";
 @Injectable()
 export class TransfersService {
 
-  constructor(private http: HttpClient, private injector: Injector) {
+  constructor(private http: HttpClient, private toastService: ToastService) {
 
   }
 
@@ -78,9 +78,6 @@ export class TransfersService {
    * @param error
    */
   private handleError(error: HttpErrorResponse) {
-    const toastService = this.injector.get(ToastService);
-    console.log(toastService);
-
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
       // Get client-side error
@@ -92,11 +89,12 @@ export class TransfersService {
     //@TODO: pass error from here to toast service
     console.log(errorMessage);
 
-    toastService.show(errorMessage, {
-      classname: 'bg-danger text-light',
-      delay: 7500,
-      autohide: true
-    });
+    // @TODO: Fix dependency injection of toastService
+    // this.toastService.show(errorMessage, {
+    //   classname: 'bg-danger text-light',
+    //   delay: 7500,
+    //   autohide: true
+    // });
     return throwError(errorMessage);
   }
 
