@@ -1,0 +1,56 @@
+@import "ngx-chips-override/colors-override";
+@import "ngx-chips-override/variables-override";
+@import "ngx-chips-override/palette-override";
+@import "ngx-chips-override/mixins-override";
+
+$font-color: #495057;
+
+// this is the container's theme
+$osahft-theme: (
+  //container-border: 1px solid #ced4da,
+  container-border: 1px solid map-get($color-primary, 'default'),
+  container-border-focused: 1px solid map-get($color-focused, 'bootstrap'),
+  container-border-invalid: 1px solid map-get($color-error, 'bootstrap'),
+  box-shadow-focused: 0 0 0 0.2rem lighten(map-get($color-primary, 'bootstrap'), 40%),
+  box-shadow-invalid: 0 0 0 0.2rem lighten(map-get($color-error, 'bootstrap'), 30%),
+  error-message-color: map-get($color-error, 'bootstrap'),
+  border-radius: .25rem,
+  container-padding: 0.05rem 0 0.05rem 0.10rem,
+  font-color: $font-color
+);
+
+// this is the tag's theme
+$osahft-tag-theme: (
+  height: 2rem,
+  font-size: 1rem,
+  line-height: 1.75rem,
+  margin: 0.1rem 0,
+  border-radius: 0.25rem,
+  background: map-get($color-primary, 'default'),
+  color: #444,
+  color-hover: #444,
+  background-focused: map-get($color-focused, 'minimal'),
+  background-active: map-get($color-focused, 'minimal'),
+  background-hover: darken(map-get($color-primary, 'minimal'), 5%)
+);
+
+// this is the delete icon's theme
+$osahft-icon-theme: (
+  fill: #444,
+  fill-focus: #444
+);
+
+// apply theme to the container
+::ng-deep tag-input .ng2-tag-input.osahft-theme {
+  @include tag-input-theme($osahft-theme);
+}
+
+// apply theme to the tags
+::ng-deep tag-input .ng2-tag-input.osahft-theme tag {
+  @include tag-theme($osahft-tag-theme);
+}
+
+// apply theme to the delete icon
+::ng-deep tag-input .ng2-tag-input.osahft-theme tag delete-icon {
+  @include icon-theme($osahft-icon-theme);
+}
