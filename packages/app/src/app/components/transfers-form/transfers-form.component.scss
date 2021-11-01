@@ -1,0 +1,13 @@
+@import "osahft-theme";
+
+file-upload,
+.file-upload {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px dashed #ccc;
+  outline: rgba(255, 255, 255, 0.5);
+}
+
+.form-text {
+  font-size: .75rem;
+  color: #999;
+}

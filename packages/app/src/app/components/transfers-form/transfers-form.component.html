@@ -1,0 +1,86 @@
+<form>
+  <div class="form-group">
+    <file-upload class="file-upload" [(ngModel)]="files" [animation]=false name="files">Upload your files.</file-upload>
+  </div>
+
+  <div class="form-group">
+    <label for="messageTitle" class="form-label">Title</label>
+    <input type="text" #messageTitle="ngModel" [class.is-invalid]="messageTitle.invalid && messageTitle.touched"
+           [required]=true
+           (change)="isTitleValid = mailTitle.length > 0"
+           [(ngModel)]="mailTitle" class="form-control" name="messageTitle" id="messageTitle"/>
+    <div *ngIf="messageTitle.errors && messageTitle.invalid && messageTitle.touched">
+      <small class="text-danger" *ngIf="messageTitle.errors.required">Title is required</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="message" class="form-label">Message</label>
+    <textarea id="message" class="form-control" [(ngModel)]="messageBody" name="messageBody"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="senderEmail">Your email</label>
+    <input type="email" #senderEmail="ngModel" [class.is-invalid]="senderEmail.invalid && senderEmail.touched"
+           [pattern]="emailPattern" class="form-control" name="senderEmail"
+           [required]=true
+           [(ngModel)]="senderAddress" id="senderEmail"/>
+
+    <div *ngIf="senderEmail.errors && senderEmail.invalid && senderEmail.touched">
+      <small class="text-danger" *ngIf="senderEmail.errors.required">Sender email is required</small>
+      <small class="text-danger" *ngIf="senderEmail.errors.pattern">Please provide a valid email address of format abc@domain.com</small>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Email to</label>
+    <tag-input [(ngModel)]=receiverAddresses
+               name="receivers"
+               [displayBy]="'label'"
+               [validators]="validators"
+               [identifyBy]="'label'"
+               [theme]="'osahft-theme'"
+               placeholder="+"
+               secondaryPlaceholder=""
+               [separatorKeyCodes]="[32, 188]"
+               [addOnBlur]="true"
+               [errorMessages]="errorMessages" [removable]=true>
+
+    </tag-input>
+    <div class="form-text">You can add more than one receiver for your files.</div>
+  </div>
+
+  <button type="submit" class="btn btn-primary" (click)="initTransfer()">Transfer
+  </button>
+</form>
+
+<!-- <button class="btn btn-danger" (click)="showError('I am the error now!')">Error toast</button> -->
+
+<app-toasts></app-toasts>
+
+<ng-template #tokenPopup let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Verify your transfer</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>We have send a verification token to your email address <strong>{{senderAddress}}</strong>. Please check your email account and fill in the token below to finish your transfer.</p>
+    <form>
+      <div class="form-group">
+        <label for="token">Enter token</label>
+        <div class="input-group">
+          <input id="token" [(ngModel)]="token" name="token" [required]=true class="form-control" ngbAutofocus>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="verifyAndExecuteTransfer()">Finish transfer</button>
+  </div>
+</ng-template>
+
+<!-- <button class="btn btn-lg btn-outline-primary" (click)="openModal(tokenPopup)">Launch demo modal</button> -->
+
