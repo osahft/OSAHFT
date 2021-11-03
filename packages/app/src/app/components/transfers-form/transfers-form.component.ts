@@ -117,20 +117,6 @@ export class TransfersFormComponent implements OnInit {
   }
 
   /**
-   * Checks whether given control's value is a valid email address).
-   * @param control
-   */
-  private checkPattern(control: AbstractControl) {
-    const patternRegex = this.emailPattern;
-    if (patternRegex.test(control.value)) {
-      console.log("Match exists.");
-    } else {
-      return {'pattern': true};
-    }
-    return null;
-  }
-
-  /**
    * Shows error message toast with given message.
    * @param message
    * @param type
