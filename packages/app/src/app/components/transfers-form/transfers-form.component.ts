@@ -21,15 +21,14 @@ export class TransfersFormComponent implements OnInit {
   mailTransferId: string = '';
 
   mailError: string = 'Please provide a valid email address of format abc@domain.com';
-  titleError: string = 'Please provide a Title';
-  tokenError: string = 'Please provide a valid Token';
+  titleError: string = 'Please provide a title';
+  tokenError: string = 'Please provide a valid token';
   receiverError = {
     'mailError': this.mailError
   };
-  validators = [this.checkPattern];
-
-  numericPattern: string = "^[0-9]{6,6}$";
-  emailPattern: string = `(?:[a-z0-9!#$%&'*+\\/=?^_\`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\\/=?^_\`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])`; //NOSONAR
+  emailPattern = new RegExp(/(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/);//NOSONAR
+  numericPattern = new RegExp(/^[0-9]{6}$/);
+  receiversValidators = [Validators.pattern(this.emailPattern)];
 
   transfersForm;
   modalForm;
@@ -43,7 +42,7 @@ export class TransfersFormComponent implements OnInit {
       messageTitle: ['', [Validators.required]],
       senderEmail: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
       messageBody: [''],
-      receiverMails: [[] as { label: string }[], [Validators.required]],
+      receiverMails: [[] as { label: string }[], Validators.required],
       transferFiles: [[] as File[], Validators.required]
     });
 
@@ -122,7 +121,7 @@ export class TransfersFormComponent implements OnInit {
    * @param control
    */
   private checkPattern(control: AbstractControl) {
-    const patternRegex = /(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;//NOSONAR
+    const patternRegex = this.emailPattern;
     if (patternRegex.test(control.value)) {
       console.log("Match exists.");
     } else {
