@@ -2,7 +2,7 @@ import {Injectable, isDevMode} from '@angular/core';
 import {Constants} from "../../shared/constants";
 import {Types} from "../../shared/types";
 import {HttpClient, HttpErrorResponse, HttpHeaders,} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastService} from "../toast/toast.service";
 
