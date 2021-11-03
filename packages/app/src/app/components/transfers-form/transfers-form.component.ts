@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {AbstractControl} from "@angular/forms";
 import {TransfersService} from "../../services/transfers/transfers.service";
 import {Constants} from "../../shared/constants";
@@ -13,7 +13,10 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
   exportAs: "transfersForm",
 })
 
+// @ts-ignore
 export class TransfersFormComponent implements OnInit {
+  @Output() hideFormEvent = new EventEmitter<boolean>();
+  @Output() receiversEvent = new EventEmitter<string[]>();
   mailTitle: string = '';
   messageBody: string = '';
   senderAddress: string = '';
@@ -115,6 +118,8 @@ export class TransfersFormComponent implements OnInit {
       this.modalReference.close();
       // clear token input on modal close
       this.token = '';
+      this.hideFormEmitter(false);
+      this.receiversEmitter(this.receiverAddresses);
     }
 
   }
@@ -166,6 +171,17 @@ export class TransfersFormComponent implements OnInit {
     });
   }
 
+  /**
+   * Function to externally close ng-bootstrap modal.
+   */
+  public closeModal() {
+    this.modalReference.close();
+  }
+
+  /**
+   * Gets ng-bootstrap modal's dismiss reason to properly handle the modal's promise on close.
+   * @param reason
+   */
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -176,7 +192,21 @@ export class TransfersFormComponent implements OnInit {
     }
   }
 
-  public closeModal() {
-    this.modalReference.close();
+  /**
+   * Emits event to parent component to hide the transfer form.
+   * @param showForm
+   */
+  private hideFormEmitter(showForm: boolean) {
+    //@TODO: before emitting the event we should also clear/remove all form data from the model
+    this.hideFormEvent.emit(showForm);
+  }
+
+  /**
+   * Emits receivers to parent component to show in success page.
+   * @param receivers
+   */
+  private receiversEmitter(receivers: { label: string }[]) {
+    const formattedReceivers = receivers.map(receiver => receiver.label);
+    this.receiversEvent.emit(formattedReceivers);
   }
 }
