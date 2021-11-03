@@ -18,13 +18,6 @@ export class OsahftContentComponent implements OnInit {
   }
 
   /**
-   * Hides success page and shows form
-   */
-  toggleForm() {
-    this.show = !this.show;
-  }
-
-  /**
    * Gets event from transfer form component whether to show/hide success component.
    * @param flag
    */

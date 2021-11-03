@@ -13,7 +13,6 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
   exportAs: "transfersForm",
 })
 
-// @ts-ignore
 export class TransfersFormComponent implements OnInit {
   @Output() hideFormEvent = new EventEmitter<boolean>();
   @Output() receiversEvent = new EventEmitter<string[]>();
@@ -94,7 +93,7 @@ export class TransfersFormComponent implements OnInit {
   async verifyAndExecuteTransfer() {
     console.log("Token:", this.token);
 
-    const auth = await this.transferService.authenticateUser(this.mailTransferId, "12345");
+    const auth = await this.transferService.authenticateUser(this.mailTransferId, this.token);
     if (!!auth) console.log("Authenticated!", auth);
 
     const formData = new FormData();
@@ -107,11 +106,6 @@ export class TransfersFormComponent implements OnInit {
     if (!!success) {
       console.log("Files uploaded", success);
       success = await this.transferService.completeMailTransfer(this.mailTransferId)
-    }
-
-    if (!!success) {
-      console.log("Mail Transfer completed", success);
-      this.showToast("Files sent successfully!", Constants.ToastTypes.SUCCESS);
     }
 
     if (!!this.modalReference && !!success) {
