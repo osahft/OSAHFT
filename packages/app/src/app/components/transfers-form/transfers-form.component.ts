@@ -4,7 +4,7 @@ import {TransfersService} from "../../services/transfers/transfers.service";
 import {Constants} from "../../shared/constants";
 import {Types} from "../../shared/types";
 import {ToastService} from "../../services/toast/toast.service";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-transfers-form',
@@ -20,6 +20,7 @@ export class TransfersFormComponent implements OnInit {
   receiverAddresses: { label: string }[] = [];
   files: File[] = [];
   modalReference: any;
+  modalCloseResult: any;
   token: string = '';
   mailTransferId: string = '';
 
@@ -73,7 +74,7 @@ export class TransfersFormComponent implements OnInit {
       "message": this.messageBody
     }
 
-    const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody).toPromise();
+    const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody);
     if (!!transferResponse) {
       console.log("Mail Transfer created", transferResponse);
       this.mailTransferId = transferResponse.mailTransferId;
@@ -90,7 +91,7 @@ export class TransfersFormComponent implements OnInit {
   async verifyAndExecuteTransfer() {
     console.log("Token:", this.token);
 
-    const auth = await this.transferService.authenticateUser(this.mailTransferId, this.token).toPromise();
+    const auth = await this.transferService.authenticateUser(this.mailTransferId, "12345");
     if (!!auth) console.log("Authenticated!", auth);
 
     const formData = new FormData();
@@ -98,11 +99,11 @@ export class TransfersFormComponent implements OnInit {
       formData.append("files", f, f.name);
     }
 
-    let success = await this.transferService.uploadFiles(this.mailTransferId, formData).toPromise();
+    let success = await this.transferService.uploadFiles(this.mailTransferId, formData)
 
     if (!!success) {
       console.log("Files uploaded", success);
-      success = await this.transferService.completeMailTransfer(this.mailTransferId).toPromise();
+      success = await this.transferService.completeMailTransfer(this.mailTransferId)
     }
 
     if (!!success) {
@@ -156,11 +157,26 @@ export class TransfersFormComponent implements OnInit {
    * Opens modal by given modal reference.
    * @param content
    */
-  private openModal(content: any) {
+  public openModal(content: any) {
     this.modalReference = this.modalService.open(content);
     this.modalReference.result.then((result: any) => {
-      console.log(`Closed with: ${result}`)
-    })
+      this.modalCloseResult = `Closed with: ${result}`;
+    }, (reason: any) => {
+      this.modalCloseResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
   }
 
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  public closeModal() {
+    this.modalReference.close();
+  }
 }

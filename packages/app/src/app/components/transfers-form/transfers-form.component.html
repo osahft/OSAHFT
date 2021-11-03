@@ -62,7 +62,7 @@
 <ng-template #tokenPopup let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Verify your transfer</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -82,5 +82,5 @@
   </div>
 </ng-template>
 
-<!-- <button class="btn btn-lg btn-outline-primary" (click)="openModal(tokenPopup)">Launch demo modal</button> -->
+<button class="btn btn-lg btn-outline-primary" (click)="openModal(tokenPopup)">Launch demo modal</button>
 

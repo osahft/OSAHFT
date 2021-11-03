@@ -22,7 +22,7 @@ export class TransfersService {
    * Calls endpoint to create a pending MailTransfer by passing form data.
    * @param mailTransferRequest
    */
-  createMailTransfer(mailTransferRequest: Types.CreateMailTransferRequest): Observable<Types.CreateMailTransferResponse> {
+  createMailTransfer(mailTransferRequest: Types.CreateMailTransferRequest): Promise<Types.CreateMailTransferResponse> {
     console.log(this.BASE_URL);
     return this.http.post<Types.CreateMailTransferResponse>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}`, mailTransferRequest, {
       headers: new HttpHeaders({
@@ -30,15 +30,15 @@ export class TransfersService {
       })
     })
       .pipe(
-        catchError(this.handleError)
-      )
+        catchError(this.handleError.bind(this))
+      ).toPromise()
   }
 
   /**
    * Calls endpoint to complete a pending MailTransfer thereby closing it by passing a valid `mailTransferId`.
    * @param mailTransferId
    */
-  completeMailTransfer(mailTransferId: string): Observable<any> {
+  completeMailTransfer(mailTransferId: string): Promise<any> {
     const idParam = `/${mailTransferId}`;
     return this.http.put<any>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}${idParam}`, {},
       {
@@ -49,8 +49,8 @@ export class TransfersService {
       }
     )
       .pipe(
-        catchError(this.handleError)
-      )
+        catchError(this.handleError.bind(this))
+      ).toPromise()
   }
 
   /**
@@ -58,12 +58,12 @@ export class TransfersService {
    * @param mailTransferId
    * @param files
    */
-  uploadFiles(mailTransferId: string, files: FormData): Observable<any> {
+  uploadFiles(mailTransferId: string, files: FormData): Promise<any> {
     const idParam = `/${mailTransferId}`;
     return this.http.post<any>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}${idParam}${Constants.Paths.UPLOADS}`, files, {observe: 'response'})
       .pipe(
-        catchError(this.handleError)
-      )
+        catchError(this.handleError.bind(this))
+      ).toPromise()
   }
 
   /**
@@ -71,12 +71,12 @@ export class TransfersService {
    * @param mailTransferId
    * @param authToken
    */
-  authenticateUser(mailTransferId: string, authToken: string): Observable<any> {
+  authenticateUser(mailTransferId: string, authToken: string): Promise<any> {
     const path = `/${mailTransferId}${Constants.Paths.AUTH}/${authToken}`;
     return this.http.post<any>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}${path}`, {}, {observe: 'response'})
       .pipe(
-        catchError(this.handleError)
-      )
+        catchError(this.handleError.bind(this))
+      ).toPromise()
   }
 
   /**
@@ -96,11 +96,11 @@ export class TransfersService {
     console.log(errorMessage);
 
     // @TODO: Fix dependency injection of toastService
-    // this.toastService.show(errorMessage, {
-    //   classname: 'bg-danger text-light',
-    //   delay: 7500,
-    //   autohide: true
-    // });
+    this.toastService.show(errorMessage, {
+      classname: 'bg-danger text-light',
+      delay: 7500,
+      autohide: true
+    });
     return throwError(errorMessage);
   }
 
