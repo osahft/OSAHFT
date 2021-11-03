@@ -1,10 +1,10 @@
 import {Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {AbstractControl} from "@angular/forms";
+import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
 import {TransfersService} from "../../services/transfers/transfers.service";
 import {Constants} from "../../shared/constants";
 import {Types} from "../../shared/types";
 import {ToastService} from "../../services/toast/toast.service";
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-transfers-form',
@@ -16,35 +16,40 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 export class TransfersFormComponent implements OnInit {
   @Output() hideFormEvent = new EventEmitter<boolean>();
   @Output() receiversEvent = new EventEmitter<string[]>();
-  mailTitle: string = '';
-  messageBody: string = '';
-  senderAddress: string = '';
-  receiverAddresses: { label: string }[] = [];
-  files: File[] = [];
   modalReference: any;
   modalCloseResult: any;
-  token: string = '';
   mailTransferId: string = '';
 
-  isTitleValid: boolean = false;
-
-  errorMessages = {
-    'pattern': 'Please provide a valid email address of format abc@domain.com',
+  mailError: string = 'Please provide a valid email address of format abc@domain.com';
+  titleError: string = 'Please provide a Title';
+  tokenError: string = 'Please provide a valid Token';
+  receiverError = {
+    'mailError': this.mailError
   };
   validators = [this.checkPattern];
 
+  numericPattern: string = "^[0-9]{6,6}$";
   emailPattern: string = `(?:[a-z0-9!#$%&'*+\\/=?^_\`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\\/=?^_\`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])`; //NOSONAR
 
-
+  transfersForm;
+  modalForm;
   // @ts-ignore
   @ViewChild('tokenPopup') private tokenPopup: TemplateRef<NgbModal>;
 
-  constructor(
-    private transferService: TransfersService,
-    private toastService: ToastService,
-    private modalService: NgbModal
-  ) {
-    // intentional empty function body
+  constructor(private transferService: TransfersService, private toastService: ToastService, private modalService: NgbModal,
+              private formBuilder: FormBuilder) {
+
+    this.transfersForm = this.formBuilder.group({
+      messageTitle: ['', [Validators.required]],
+      senderEmail: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
+      messageBody: [''],
+      receiverMails: [[] as { label: string }[], [Validators.required]],
+      transferFiles: [[] as File[], Validators.required]
+    });
+
+    this.modalForm = this.formBuilder.group({
+      token: ['', [Validators.required, Validators.pattern(this.numericPattern)]]
+    });
   }
 
   ngOnInit(): void {
@@ -57,25 +62,19 @@ export class TransfersFormComponent implements OnInit {
    * Upon successful mail transfer creation opens modal for user verification.
    */
   async initTransfer() {
-    if (!this.isInputValid()) {
-      const error = new Error("Cannot start the transfer due to missing input")
-      this.showToast(error.message, Constants.ToastTypes.ERROR)
+    if (this.transfersForm.invalid) {
+      const error = new Error("Cannot start the transfer due to missing input");
+      this.showToast(error.message, Constants.ToastTypes.ERROR);
       return;
     }
 
-    // console.log(this.files)
-    // console.log(this.mailTitle)
-    // console.log(this.messageBody)
-    // console.log(this.senderAddress)
-    // console.log(this.receiverAddresses)
-
+    const receivers: { label: string }[] = this.receiverMails?.value;
     const requestBody: Types.CreateMailTransferRequest = {
-      "mailSender": this.senderAddress,
-      "mailReceivers": this.receiverAddresses.map(receivers => receivers.label),
-      "title": this.mailTitle,
-      "message": this.messageBody
-    }
-
+      "mailSender": this.senderEmail?.value,
+      "mailReceivers": receivers.map(r => r.label),
+      "title": this.messageTitle?.value,
+      "message": this.messageBody?.value
+    };
     const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody);
     if (!!transferResponse) {
       console.log("Mail Transfer created", transferResponse);
@@ -91,38 +90,31 @@ export class TransfersFormComponent implements OnInit {
    * If file transfer is successful, completes mail transfer.
    */
   async verifyAndExecuteTransfer() {
-    console.log("Token:", this.token);
+    console.log("Token:", this.token?.value);
 
-    const auth = await this.transferService.authenticateUser(this.mailTransferId, this.token);
+    const auth = await this.transferService.authenticateUser(this.mailTransferId, this.token?.value);
     if (!!auth) console.log("Authenticated!", auth);
 
     const formData = new FormData();
-    for (const f of this.files) {
+    for (const f of this.transferFiles?.value) {
       formData.append("files", f, f.name);
     }
 
-    let success = await this.transferService.uploadFiles(this.mailTransferId, formData)
+    let success = await this.transferService.uploadFiles(this.mailTransferId, formData);
 
     if (!!success) {
       console.log("Files uploaded", success);
-      success = await this.transferService.completeMailTransfer(this.mailTransferId)
+      success = await this.transferService.completeMailTransfer(this.mailTransferId);
     }
 
     if (!!this.modalReference && !!success) {
       this.modalReference.close();
       // clear token input on modal close
-      this.token = '';
+      this.token?.reset();
       this.hideFormEmitter(false);
-      this.receiversEmitter(this.receiverAddresses);
+      this.receiversEmitter(this.receiverMails?.value);
     }
 
-  }
-
-  /**
-   * Checks whether form inputs title, receiver address, sender address and files are valid = given.
-   */
-  private isInputValid() {
-    return this.isTitleValid && this.receiverAddresses.length > 0 && this.senderAddress.length > 0 && this.files.length > 0;
   }
 
   /**
@@ -134,7 +126,7 @@ export class TransfersFormComponent implements OnInit {
     if (patternRegex.test(control.value)) {
       console.log("Match exists.");
     } else {
-      return {'pattern': true}
+      return {'pattern': true};
     }
     return null;
   }
@@ -191,7 +183,8 @@ export class TransfersFormComponent implements OnInit {
    * @param showForm
    */
   private hideFormEmitter(showForm: boolean) {
-    //@TODO: before emitting the event we should also clear/remove all form data from the model
+    this.transfersForm.reset();
+    this.transferFiles?.setValue([]);
     this.hideFormEvent.emit(showForm);
   }
 
@@ -202,5 +195,29 @@ export class TransfersFormComponent implements OnInit {
   private receiversEmitter(receivers: { label: string }[]) {
     const formattedReceivers = receivers.map(receiver => receiver.label);
     this.receiversEvent.emit(formattedReceivers);
+  }
+
+  get token() {
+    return this.modalForm.get('token');
+  }
+
+  get receiverMails() {
+    return this.transfersForm.get('receiverMails');
+  }
+
+  get transferFiles() {
+    return this.transfersForm.get('transferFiles');
+  }
+
+  get messageTitle() {
+    return this.transfersForm.get('messageTitle');
+  }
+
+  get senderEmail() {
+    return this.transfersForm.get('senderEmail');
+  }
+
+  get messageBody() {
+    return this.transfersForm.get('messageBody');
   }
 }
