@@ -25,3 +25,14 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Adding https-support
+
+To run the app with https the following properties have to be added to `angular.json` 
+
+```
+"ssl": true
+"sslKey": "ssl/server.key"
+"sslCert": "ssl/server.crt"
+```
+The key and crt file have to be generated and the file paths have to be adjusted accordingly. 
