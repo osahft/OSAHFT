@@ -12,7 +12,7 @@ public class ErrorHelper {
     private static final ErrorResponse BAD_REQUEST = new ErrorResponse("-00001", "", HttpStatus.BAD_REQUEST);
     @Getter
     private static final ErrorResponse UNAUTHORIZED = new ErrorResponse("-10001", "The sender email is not authorized. Use POST /api/v1/transfers/mails/{mail_transfer_id}/auth/{authentication_code} first.", HttpStatus.UNAUTHORIZED);
-    private static final ErrorResponse NOT_FOUND = new ErrorResponse("-20001", "MailTransfer not found: %s", HttpStatus.NOT_FOUND);
+    private static final ErrorResponse NOT_FOUND = new ErrorResponse("-20001", "MailTransfer not found: %s.", HttpStatus.NOT_FOUND);
     private static final ErrorResponse SERVICE_UNAVAILABLE = new ErrorResponse("-30001", "", HttpStatus.SERVICE_UNAVAILABLE);
 
     public static ErrorResponse getBAD_REQUEST(String message) {

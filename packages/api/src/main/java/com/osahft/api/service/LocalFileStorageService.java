@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -64,6 +65,7 @@ public class LocalFileStorageService implements LocalFileStorageServiceIF {
                 throw new LocalFileStorageServiceException(ErrorHelper.getSERVICE_UNAVAILABLE("File " + file.getOriginalFilename() + " could not be stored."), e);
             }
         }
+        log.info("Stored file(s): " + files.stream().map(MultipartFile::getOriginalFilename).collect(Collectors.joining(",")));
     }
 
     @Override

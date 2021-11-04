@@ -12,7 +12,7 @@ public interface LocalFileStorageServiceIF {
 
     void storeFiles(String transferId, List<MultipartFile> files) throws LocalFileStorageServiceException, MailTransferRepositoryException;
 
-    List<File> readFiles(String transferId) throws MailTransferRepositoryException, LocalFileStorageServiceException;
+    List<File> readFiles(String transferId) throws MailTransferRepositoryException;
 
     void deleteStorage(String transferId) throws MailTransferRepositoryException, LocalFileStorageServiceException;
 }

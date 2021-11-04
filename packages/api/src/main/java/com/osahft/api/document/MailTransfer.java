@@ -38,7 +38,7 @@ public class MailTransfer {
 
     private final Date createdAt = new Date();
 
-    private Boolean isAuthenticated = false;
+    private Boolean isAuthorized = false;
 
     private String mailSender;
 

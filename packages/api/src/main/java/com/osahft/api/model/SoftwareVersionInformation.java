@@ -1,15 +1,18 @@
 package com.osahft.api.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Data
+@AllArgsConstructor
 public class SoftwareVersionInformation {
-    @NonNull
+    @NotBlank
     private String restApiVersion;
-    @NonNull
+    @NotNull
     private Instant buildDate;
 
 }
