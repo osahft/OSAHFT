@@ -158,8 +158,9 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-        driver-opts: |
-          network=${{ job.container.network }}
+        with:
+          driver-opts: |
+            network=${{ job.container.network }}
 
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
