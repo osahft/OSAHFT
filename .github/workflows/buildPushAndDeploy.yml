@@ -77,7 +77,7 @@ jobs:
 
   buildApiDocker:
     name: Build osahft-api and push image
-    needs: [ApiSonarCloud]
+#    needs: [ApiSonarCloud]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -129,7 +129,7 @@ jobs:
 
   buildAppDocker:
     name: Build osahft-app and push image
-    needs: [AppSonarCloud]
+#    needs: [AppSonarCloud]
     runs-on: ubuntu-latest
     permissions:
       contents: read
