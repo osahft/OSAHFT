@@ -158,9 +158,9 @@ jobs:
           echo "\n\n"
           echo "echo 2 -- ${{ job.container.network }}"
           echo "\n\n"
-          echo "echo host -- ${{ job.services.elasticsearch.host }}
+          echo "host -- ${{ job.services.elasticsearch.host }}
           echo "\n\n"
-          echo "echo service -- ${{ job.services.elasticsearch }}
+          echo "name -- ${{ job.services.elasticsearch.name }}
 
       - name: Set up Docker Buildx
         id: osahft-buildx
