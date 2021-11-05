@@ -119,6 +119,12 @@ jobs:
         with:
           string: '${{env.IMAGE_NAME_API}}'
 
+      - name: Check file
+          id: log
+          working-directory: ./packages/api
+          run: >
+            cat src/test/resources/test.properties
+
       - name: Set test properties
         id: test-properties
         working-directory: ./packages/api
@@ -140,6 +146,12 @@ jobs:
           data.dir=/home/osahft/api"
           > src/test/resources/test.properties
 
+      - name: Check file no.2
+        id: log2
+        working-directory: ./packages/api
+        run: >
+          cat src/test/resources/test.properties
+
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
         with:
@@ -148,64 +160,64 @@ jobs:
           tags: >-
             ${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}:${{steps.api-version.outputs.current-version }}
 
-  buildAppDocker:
-    name: Build osahft-app and push image
+#  buildAppDocker:
+#    name: Build osahft-app and push image
 #    needs: [AppSonarCloud]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Get package version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
-        with:
-          path: ./packages/app
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v1
-        with:
-          registry: '${{ env.REGISTRY }}'
-          username: '${{ github.actor }}'
-          password: '${{ secrets.GITHUB_TOKEN }}'
-
-      - name: $IMAGE_NAME to lowercase
-        id: string
-        uses: ASzc/change-string-case-action@v1
-        with:
-          string: '${{env.IMAGE_NAME_APP}}'
-
-      - name: Build and push APP Docker image
-        uses: docker/build-push-action@v2
-        with:
-          build-args: --driver-opt env.BUILDKIT_STEP_LOG_MAX_SIZE=-1 --driver-opt env.BUILDKIT_STEP_LOG_MAX_SPEED=-1
-          context: ./packages/app
-          push: true
-          tags: >-
-            ${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}:${{steps.package-version.outputs.current-version}}-SNAPSHOT
-
-  deployToServer:
-    name: Trigger deployment to server
-    needs: [buildApiDocker, buildAppDocker]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Generate timestamp for hook payload
-        id: timestamp
-        run: |
-          echo "::set-output name=timestamp::$(date +'%Y-%m-%d_%H-%M-%S')"
-
-      - name: Invoke deployment hook
-        uses: distributhor/workflow-webhook@v2
-        env:
-          webhook_type: json-extended
-          webhook_url: '${{ secrets.WEBHOOK_URL }}'
-          webhook_secret: '${{ secrets.WEBHOOK_SECRET }}'
-          data: '{ "timestamp": "${{ steps.timestamp.outputs.timestamp }}" }'
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#      packages: write
+#
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+#
+#      - name: Get package version
+#        id: package-version
+#        uses: martinbeentjes/npm-get-version-action@master
+#        with:
+#          path: ./packages/app
+#
+#      - name: Log in to the Container registry
+#        uses: docker/login-action@v1
+#        with:
+#          registry: '${{ env.REGISTRY }}'
+#          username: '${{ github.actor }}'
+#          password: '${{ secrets.GITHUB_TOKEN }}'
+#
+#      - name: $IMAGE_NAME to lowercase
+#        id: string
+#        uses: ASzc/change-string-case-action@v1
+#        with:
+#          string: '${{env.IMAGE_NAME_APP}}'
+#
+#      - name: Build and push APP Docker image
+#        uses: docker/build-push-action@v2
+#        with:
+#          build-args: --driver-opt env.BUILDKIT_STEP_LOG_MAX_SIZE=-1 --driver-opt env.BUILDKIT_STEP_LOG_MAX_SPEED=-1
+#          context: ./packages/app
+#          push: true
+#          tags: >-
+#            ${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}:${{steps.package-version.outputs.current-version}}-SNAPSHOT
+#
+#  deployToServer:
+#    name: Trigger deployment to server
+#    needs: [buildApiDocker, buildAppDocker]
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#      packages: write
+#
+#    steps:
+#      - name: Generate timestamp for hook payload
+#        id: timestamp
+#        run: |
+#          echo "::set-output name=timestamp::$(date +'%Y-%m-%d_%H-%M-%S')"
+#
+#      - name: Invoke deployment hook
+#        uses: distributhor/workflow-webhook@v2
+#        env:
+#          webhook_type: json-extended
+#          webhook_url: '${{ secrets.WEBHOOK_URL }}'
+#          webhook_secret: '${{ secrets.WEBHOOK_SECRET }}'
+#          data: '{ "timestamp": "${{ steps.timestamp.outputs.timestamp }}" }'
