@@ -130,7 +130,7 @@ jobs:
         working-directory: ./packages/api
         run: >
           echo
-          "server.servlet.context-path=/api\n 
+          $'server.servlet.context-path=/api\n
           springdoc.swagger-ui.path=\n 
           file.service=dracoon\n 
           file.service.url=https://dracoon.team\n 
@@ -143,7 +143,7 @@ jobs:
           spring.mail.port=587\n
           spring.mail.username=username\n
           spring.mail.password=password\n
-          data.dir=/home/osahft/api"
+          data.dir=/home/osahft/api'
           > src/test/resources/test.properties
 
       - name: Check file no.2
