@@ -86,8 +86,6 @@ jobs:
     services:
       elasticsearch:
         image: elasticsearch:7.14.2
-        ports:
-          - 9200:9200
         env:
           discovery.type: single-node
         options: >-
@@ -124,6 +122,7 @@ jobs:
         working-directory: ./packages/api
         run: >
           cat src/test/resources/test.properties
+          curl http://localhost:9200/_cluster/health
 
       - name: Set test properties
         id: test-properties
@@ -131,20 +130,21 @@ jobs:
         run: >
           echo
           $'server.servlet.context-path=/api\n
-          springdoc.swagger-ui.path=\n 
-          file.service=dracoon\n 
+          springdoc.swagger-ui.path=\n
+          file.service=dracoon\n
           file.service.url=https://dracoon.team\n 
           file.service.oauth.access-token=INVALID_TOKEN\n 
-          elasticsearch.username=username\n 
+          elasticsearch.username=username\n
           elasticsearch.password=INVALID_PASSWORD\n 
-          elasticsearch.host=elasticsearch\n 
-          elasticsearch.port=9200\n 
+          elasticsearch.host=localhost\n
+          elasticsearch.port=9200\n
           spring.mail.host=smtp.example.org\n
           spring.mail.port=587\n
           spring.mail.username=username\n
           spring.mail.password=password\n
           data.dir=/home/osahft/api'
           > src/test/resources/test.properties
+          curl http://localhost:9200/_cluster/health
 
       - name: Check file no.2
         id: log-properties2
