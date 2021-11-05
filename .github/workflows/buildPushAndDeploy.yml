@@ -83,6 +83,19 @@ jobs:
       contents: read
       packages: write
 
+    services:
+      elasticsearch:
+        image: elasticsearch:7.14.2
+        ports:
+          - 9200:9200
+        env:
+          discovery.type: single-node
+        options: >-
+          --health-cmd="curl http://localhost:9200/_cluster/health"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
