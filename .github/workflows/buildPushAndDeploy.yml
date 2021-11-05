@@ -85,6 +85,7 @@ jobs:
 
     services:
       elasticsearch:
+        name: elasticsearch
         image: elasticsearch:7.14.2
         ports:
           - 9200:9200
@@ -155,6 +156,10 @@ jobs:
           echo "echo 1 -- ${{ job.services.elasticsearch.network }}"
           echo "\n\n"
           echo "echo 2 -- ${{ job.container.network }}"
+          echo "\n\n"
+          echo "echo host -- ${{ job.services.elasticsearch.host }}
+          echo "\n\n"
+          echo "echo service -- ${{ job.services.elasticsearch }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
