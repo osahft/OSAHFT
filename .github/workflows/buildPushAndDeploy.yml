@@ -173,7 +173,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.osahft-buildx.outputs.name }}
-          network: ${{ job.container.network }}
           context: ./packages/api
           push: true
           tags: >-
