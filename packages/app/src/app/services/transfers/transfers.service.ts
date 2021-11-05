@@ -22,9 +22,9 @@ export class TransfersService {
    * Calls endpoint to create a pending MailTransfer by passing form data.
    * @param mailTransferRequest
    */
-  createMailTransfer(mailTransferRequest: Types.CreateMailTransferRequest): Promise<Types.CreateMailTransferResponse> {
+  createMailTransfer(mailTransferRequest: Types.ICreateMailTransferRequest): Promise<Types.ICreateMailTransferResponse> {
     console.log(this.BASE_URL);
-    return this.http.post<Types.CreateMailTransferResponse>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}`, mailTransferRequest, {
+    return this.http.post<Types.ICreateMailTransferResponse>(`${this.BASE_URL}${Constants.Paths.API}${Constants.Paths.TRANSFERS}`, mailTransferRequest, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })

@@ -14,7 +14,7 @@ import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class TransfersFormComponent implements OnInit {
-  @Output() hideFormEvent = new EventEmitter<Types.FormToggleEvent>();
+  @Output() hideFormEvent = new EventEmitter<Types.IFormToggleEvent>();
   modalReference: any;
   modalCloseResult: any;
   mailTransferId: string = '';
@@ -70,13 +70,13 @@ export class TransfersFormComponent implements OnInit {
     }
 
     const receivers: { label: string }[] = this.receiverMails?.value;
-    const requestBody: Types.CreateMailTransferRequest = {
+    const requestBody: Types.ICreateMailTransferRequest = {
       "mailSender": this.senderEmail?.value,
       "mailReceivers": receivers.map(r => r.label),
       "title": this.messageTitle?.value,
       "message": this.messageBody?.value
     };
-    const transferResponse: Types.CreateMailTransferResponse | void = await this.transferService.createMailTransfer(requestBody).catch(error => console.log(error));
+    const transferResponse: Types.ICreateMailTransferResponse | void = await this.transferService.createMailTransfer(requestBody).catch(error => console.log(error));
 
     if (!!transferResponse) {
       console.log("Mail Transfer created", transferResponse);
@@ -171,7 +171,7 @@ export class TransfersFormComponent implements OnInit {
    * @param receivers
    */
   private hideFormEmitter(showForm: boolean, receivers: { label: string }[]) {
-    const toEmit: Types.FormToggleEvent = {
+    const toEmit: Types.IFormToggleEvent = {
       flag: showForm,
       receivers: receivers.map(receiver => receiver.label)
     };

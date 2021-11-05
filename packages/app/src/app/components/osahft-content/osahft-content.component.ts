@@ -22,7 +22,7 @@ export class OsahftContentComponent implements OnInit {
    * Gets event from transfer form component whether to show/hide success component.
    * @param toggleEvent
    */
-  getToggleFormEvent(toggleEvent: Types.FormToggleEvent) {
+  getToggleFormEvent(toggleEvent: Types.IFormToggleEvent) {
     this.show = toggleEvent.flag;
     this.receivers = toggleEvent.receivers;
   }

@@ -8,7 +8,7 @@ import {Types} from "../../shared/types";
 })
 export class TransferSuccessComponent implements OnInit {
   @Input() receivers: string[] = [];
-  @Output() showFormEvent = new EventEmitter<Types.FormToggleEvent>();
+  @Output() showFormEvent = new EventEmitter<Types.IFormToggleEvent>();
 
   constructor() {
     // intentional empty function body
@@ -30,7 +30,7 @@ export class TransferSuccessComponent implements OnInit {
    * @param showForm
    */
   private showFormEmitter(showForm: boolean) {
-    const toggleEvent: Types.FormToggleEvent = {
+    const toggleEvent: Types.IFormToggleEvent = {
       flag: showForm,
       receivers: []
     }
