@@ -8,7 +8,7 @@ file-upload {
   overflow-y: scroll;
 }
 
-.form-error.ng-invalid.ng-touched, #senderEmail.ng-invalid.ng-touched, #messageTitle.ng-invalid.ng-touched {
+.form-error.ng-invalid.ng-touched, #senderEmail.ng-invalid.ng-touched, #messageTitle.ng-invalid.ng-touched, #message.ng-invalid.ng-touched {
   border: 1px solid red;
   border-radius: 5px;
 }

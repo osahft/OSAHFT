@@ -22,8 +22,9 @@ export class TransfersFormComponent implements OnInit {
 
   mailError: string = 'Please provide a valid email address of format abc@domain.com';
   titleError: string = 'Please provide a title';
+  messageError: string = 'Please provide a message';
   tokenError: string = 'Please provide a valid token';
-  filesError: string = 'Please provide at least one file'
+  filesError: string = 'Please provide at least one file';
   receiverError = {
     'mailError': this.mailError
   };
@@ -42,7 +43,7 @@ export class TransfersFormComponent implements OnInit {
     this.transfersForm = this.formBuilder.group({
       messageTitle: ['', [Validators.required]],
       senderEmail: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
-      messageBody: [''],
+      messageBody: ['', Validators.required],
       receiverMails: [[] as { label: string }[], Validators.required],
       transferFiles: [[] as File[], Validators.required]
     });
