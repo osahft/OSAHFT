@@ -120,7 +120,7 @@ jobs:
           string: '${{env.IMAGE_NAME_API}}'
 
       - name: Check file
-        id: log
+        id: log-properties1
         working-directory: ./packages/api
         run: >
           cat src/test/resources/test.properties
@@ -147,7 +147,7 @@ jobs:
           > src/test/resources/test.properties
 
       - name: Check file no.2
-        id: log2
+        id: log-properties2
         working-directory: ./packages/api
         run: >
           cat src/test/resources/test.properties
