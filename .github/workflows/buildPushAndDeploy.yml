@@ -95,6 +95,8 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
+          --name elasticsearch
+          --hostname elasticsearch
 
     steps:
       - name: Checkout repository
