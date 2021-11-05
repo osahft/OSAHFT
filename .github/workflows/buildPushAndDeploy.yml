@@ -120,25 +120,25 @@ jobs:
           string: '${{env.IMAGE_NAME_API}}'
 
       - name: Set test properties
-        - id: test-properties
-        -  working-directory: ./packages/api
-        - run: >
-            echo
-            "server.servlet.context-path=/api
-            springdoc.swagger-ui.path=
-            file.service=dracoon
-            file.service.url=https://dracoon.team
-            file.service.oauth.access-token=INVALID_TOKEN
-            elasticsearch.username=username
-            elasticsearch.password=INVALID_PASSWORD
-            elasticsearch.host=elasticsearch
-            elasticsearch.port=9200
-            spring.mail.host=smtp.example.org
-            spring.mail.port=587
-            spring.mail.username=username
-            spring.mail.password=password
-            data.dir=/home/osahft/api"
-            > src/test/resources/test.properties
+        id: test-properties
+        working-directory: ./packages/api
+        run: >
+          echo
+          "server.servlet.context-path=/api
+          springdoc.swagger-ui.path=
+          file.service=dracoon
+          file.service.url=https://dracoon.team
+          file.service.oauth.access-token=INVALID_TOKEN
+          elasticsearch.username=username
+          elasticsearch.password=INVALID_PASSWORD
+          elasticsearch.host=elasticsearch
+          elasticsearch.port=9200
+          spring.mail.host=smtp.example.org
+          spring.mail.port=587
+          spring.mail.username=username
+          spring.mail.password=password
+          data.dir=/home/osahft/api"
+          > src/test/resources/test.properties
 
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
