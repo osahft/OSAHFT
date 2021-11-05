@@ -1,16 +1,19 @@
 <form [formGroup]="transfersForm">
   <div class="form-group">
-    <file-upload formControlName="transferFiles" class="file-upload" [animation]=false>
-      Upload your files.
-    </file-upload>
+    <div class="box">
+      <file-upload class="form-error" formControlName="transferFiles" [animation]=false>
+      </file-upload>
+    </div>
+    <div *ngIf="transferFiles?.invalid && transferFiles?.touched">
+      <small class="text-danger">{{filesError}}</small>
+    </div>
   </div>
 
   <div class="form-group">
     <label for="messageTitle" class="form-label">Title</label>
     <input type="text"
            formControlName="messageTitle"
-           class="form-control" name="messageTitle" id="messageTitle"
-           [class.is-invalid]="messageTitle?.invalid && messageTitle?.touched"/>
+           class="form-control" name="messageTitle" id="messageTitle"/>
     <div *ngIf="messageTitle?.invalid && messageTitle?.touched">
       <small class="text-danger">{{titleError}}</small>
     </div>
@@ -25,8 +28,7 @@
     <label for="senderEmail" class="form-label">Your email</label>
     <input type="email" formControlName="senderEmail"
            class="form-control" name="senderEmail"
-           id="senderEmail"
-           [class.is-invalid]="senderEmail?.invalid && senderEmail?.touched"/>
+           id="senderEmail"/>
     <div *ngIf="senderEmail?.invalid && senderEmail?.touched">
       <small class="text-danger">{{mailError}}</small>
     </div>
@@ -36,6 +38,7 @@
   <div class="form-group">
     <label class="form-label">Email to</label>
     <tag-input formControlName="receiverMails"
+               class="form-error"
                [displayBy]="'label'"
                [validators]="receiversValidators"
                [identifyBy]="'label'"
@@ -43,9 +46,8 @@
                placeholder="+"
                secondaryPlaceholder=""
                [separatorKeyCodes]="[32, 188]"
-               [addOnBlur]="true"
-               [removable]=true
-               [errorMessages]="receiverError">
+               [addOnBlur]=true
+               [removable]=true>
     </tag-input>
     <div *ngIf="receiverMails?.invalid && receiverMails?.touched">
       <small class="text-danger">{{mailError}}</small>

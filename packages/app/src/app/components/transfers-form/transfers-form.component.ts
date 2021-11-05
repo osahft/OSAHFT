@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, Validators} from "@angular/forms";
 import {TransfersService} from "../../services/transfers/transfers.service";
 import {Constants} from "../../shared/constants";
 import {Types} from "../../shared/types";
@@ -23,6 +23,7 @@ export class TransfersFormComponent implements OnInit {
   mailError: string = 'Please provide a valid email address of format abc@domain.com';
   titleError: string = 'Please provide a title';
   tokenError: string = 'Please provide a valid token';
+  filesError: string = 'Please provide at least one file'
   receiverError = {
     'mailError': this.mailError
   };
@@ -62,7 +63,8 @@ export class TransfersFormComponent implements OnInit {
    */
   async initTransfer() {
     if (this.transfersForm.invalid) {
-      const error = new Error("Cannot start the transfer due to missing input");
+      const error = new Error("Cannot start the transfer due to invalid input");
+      this.transfersForm.markAllAsTouched();
       this.showToast(error.message, Constants.ToastTypes.ERROR);
       return;
     }
@@ -168,8 +170,11 @@ export class TransfersFormComponent implements OnInit {
    * @param showForm
    */
   private hideFormEmitter(showForm: boolean) {
-    this.transfersForm.reset();
     this.transferFiles?.setValue([]);
+    this.messageTitle?.setValue("");
+    this.messageBody?.setValue("");
+    this.senderEmail?.setValue("");
+    this.receiverMails?.setValue([]);
     this.hideFormEvent.emit(showForm);
   }
 
