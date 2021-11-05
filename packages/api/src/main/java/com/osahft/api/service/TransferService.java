@@ -5,6 +5,7 @@ import com.osahft.api.document.MailTransfer;
 import com.osahft.api.exception.LocalFileStorageServiceException;
 import com.osahft.api.exception.MailTransferRepositoryException;
 import com.osahft.api.exception.TransferServiceException;
+import com.osahft.api.helper.ErrorHelper;
 import com.osahft.api.model.CreateMailTransferRequest;
 import com.osahft.api.model.CreateMailTransferResponse;
 import com.osahft.api.repository.MailTransferRepository;
@@ -44,14 +45,13 @@ public class TransferService implements TransferServiceIF {
                 .orElseThrow(() -> new MailTransferRepositoryException(mailTransferId));
     }
 
-    private void checkAuthentication(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {
-        if (!getMailTransfer(mailTransferId).getIsAuthenticated())
-            throw new TransferServiceException("User is not authenticated. Please authenticate user first.");
+    private void checkAuthorization(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {
+        if (!getMailTransfer(mailTransferId).getIsAuthorized())
+            throw new TransferServiceException(ErrorHelper.getUNAUTHORIZED());
     }
 
     @Override
     public CreateMailTransferResponse createNewMailTransfer(CreateMailTransferRequest createMailTransferRequest) throws MailTransferRepositoryException {
-
         // create and store MailTransfer
         MailTransfer mailTransfer = MailTransfer.builder()
                 .mailSender(createMailTransferRequest.getMailSender())
@@ -71,20 +71,34 @@ public class TransferService implements TransferServiceIF {
         // create dataDir
         localFileStorageService.createStorage(mailTransfer.getId());
 
-        return CreateMailTransferResponse.builder()
-                .mailTransferId(mailTransfer.getId())
-                .build();
+        return new CreateMailTransferResponse(mailTransfer.getId());
     }
 
     @Override
     public void uploadFiles(String mailTransferId, List<MultipartFile> files) throws LocalFileStorageServiceException, MailTransferRepositoryException, TransferServiceException {
-        checkAuthentication(mailTransferId);
+        checkAuthorization(mailTransferId);
+
+        // check for duplicate file names
+        long distinctFilesNames = files.stream().map(MultipartFile::getName).distinct().count();
+        if ((long) files.size() != distinctFilesNames)
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("Duplicate file names are currently not supported."));
+
         localFileStorageService.storeFiles(mailTransferId, files);
     }
 
     @Override
     public void completeMailTransfer(String mailTransferId) throws MailTransferRepositoryException, TransferServiceException {
-        checkAuthentication(mailTransferId);
+        // check MailTransfer is not finished yet
+        if (getMailTransfer(mailTransferId).getState().equals(MailTransfer.State.FINISHED)) {
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("MailTransfer is already finished."));
+        }
+
+        // check authorization
+        checkAuthorization(mailTransferId);
+
+        // check that files exist
+        if (localFileStorageService.readFiles(mailTransferId).isEmpty())
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("No files for MailTransfer " + mailTransferId + " found."));
 
         taskExecutor.execute(() -> {
             try {
@@ -115,13 +129,17 @@ public class TransferService implements TransferServiceIF {
     }
 
     @Override
-    public void authenticateUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
+    public void authorizeUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
+        // check user isn't authorized yet
         MailTransfer mailTransfer = getMailTransfer(mailTransferId);
+        if (mailTransfer.getIsAuthorized())
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("User for MailTransfer " + mailTransferId + " is already authorized."));
+
         if (mailTransfer.getAuthenticationCode().equals(authenticationCode)) {
-            mailTransfer.setIsAuthenticated(true);
+            mailTransfer.setIsAuthorized(true);
             mailTransferRepository.save(mailTransfer);
         } else
-            throw new TransferServiceException("Could not authenticate user due to invalid authenticationCode: " + authenticationCode);
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("Could not authorize user due to invalid authenticationCode: " + authenticationCode + "."));
     }
 
 }

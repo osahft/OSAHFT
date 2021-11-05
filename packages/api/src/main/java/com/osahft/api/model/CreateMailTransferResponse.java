@@ -1,12 +1,13 @@
 package com.osahft.api.model;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
+
+import javax.validation.constraints.NotBlank;
 
 @Data
-@Builder
+@AllArgsConstructor
 public class CreateMailTransferResponse {
-    @NonNull
+    @NotBlank
     private String mailTransferId;
 }

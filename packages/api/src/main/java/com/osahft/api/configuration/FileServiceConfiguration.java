@@ -19,7 +19,7 @@ public class FileServiceConfiguration {
         if (fileService.equalsIgnoreCase("dracoon")) {
             return new DracoonClientService();
         } else {
-            throw new FileServiceException("Unsupported value for property file.service: " + fileService);
+            throw new FileServiceException("Unsupported value for property file.service: " + fileService + ".");
         }
     }
 

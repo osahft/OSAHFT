@@ -4,6 +4,7 @@ import com.osahft.api.document.MailReceiverDownloadLinkMapping;
 import com.osahft.api.document.MailTransfer;
 import com.osahft.api.exception.MailTransferRepositoryException;
 import com.osahft.api.repository.MailTransferRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
 public class MailService implements MailServiceIF {
 
     @Value("${spring.mail.username}")
@@ -45,6 +47,7 @@ public class MailService implements MailServiceIF {
 
         SimpleMailMessage message = createSimpleMail(mailTransfer.getMailSender(), "Your OSAHFT verification code");
         message.setText("Your code to verify your identity to OSAHFT: " + mailTransfer.getAuthenticationCode());
+        log.info("Sending authentication code email: " + message);
         emailSender.send(message);
     }
 
@@ -54,8 +57,10 @@ public class MailService implements MailServiceIF {
         for (MailReceiverDownloadLinkMapping mapping : mailTransfer.getMailReceiverDownloadLinkMapping()) {
             SimpleMailMessage message = createSimpleMail(mapping.getMailReceiver(), mailTransfer.getMailSender() + " has sent you " + mailTransfer.getTitle() + " via OSAHFT");
             message.setText(mailTransfer.getMessage() + "\nDownload link: " + mapping.getDownloadLink());
+            log.info("Sending download link email: " + message);
             emailSender.send(message);
         }
+
     }
 
     @Override
@@ -67,6 +72,7 @@ public class MailService implements MailServiceIF {
                 .collect(Collectors.joining(","));
         SimpleMailMessage message = createSimpleMail(mailTransfer.getMailSender(), mailTransfer.getTitle() + " sent successfully to " + receivers);
         message.setText("Thanks for using OSAHFT, the download link has been successfully sent to: " + receivers);
+        log.info("Sending success email: " + message);
         emailSender.send(message);
     }
 
