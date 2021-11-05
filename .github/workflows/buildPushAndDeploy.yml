@@ -151,15 +151,15 @@ jobs:
         run: |
           docker ps -a
           curl http://localhost:9200/_cluster/health
-          echo ${{ job.services.elasticsearch.network }}
-          echo ${{ job.container.network }}
+          echo "echo 1 ${{ job.services.elasticsearch.network }}"
+          echo "echo 2 ${{ job.container.network }}"
 
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
         with:
           context: ./packages/api
           push: true
-          network: ${{ job.services.elasticsearch.network }}
+          network: ${{ job.container.network }}
           tags: >-
             ${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}:${{steps.api-version.outputs.current-version }}
 
