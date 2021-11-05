@@ -13,6 +13,7 @@ public class ErrorHelper {
     private static final ErrorResponse TOO_MANY_REQUESTS = new ErrorResponse("-00002", "", HttpStatus.TOO_MANY_REQUESTS);
     @Getter
     private static final ErrorResponse UNAUTHORIZED = new ErrorResponse("-10001", "The sender email is not authorized. Use POST /api/v1/transfers/mails/{mail_transfer_id}/auth/{authentication_code} first.", HttpStatus.UNAUTHORIZED);
+    private static final ErrorResponse FORBIDDEN = new ErrorResponse("-10002", "", HttpStatus.FORBIDDEN);
     private static final ErrorResponse NOT_FOUND = new ErrorResponse("-20001", "MailTransfer not found: %s.", HttpStatus.NOT_FOUND);
     private static final ErrorResponse SERVICE_UNAVAILABLE = new ErrorResponse("-30001", "", HttpStatus.SERVICE_UNAVAILABLE);
 
@@ -32,4 +33,9 @@ public class ErrorHelper {
     public static ErrorResponse getTOO_MANY_REQUESTS(String message) {
         return new ErrorResponse(TOO_MANY_REQUESTS.getCode(), message, TOO_MANY_REQUESTS.getHttpStatus());
     }
+
+    public static ErrorResponse getFORBIDDEN(String message) {
+        return new ErrorResponse(FORBIDDEN.getCode(), message, FORBIDDEN.getHttpStatus());
+    }
+
 }

@@ -19,9 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.osahft.api.document.MailTransfer.State.*;
+
 @Service
 @Slf4j
 public class TransferService implements TransferServiceIF {
+
+    private static final int NUMBER_OF_AUTHENTICATION_ATTEMPTS = 5;
 
     @Autowired
     private LocalFileStorageServiceIF localFileStorageService;
@@ -46,7 +50,7 @@ public class TransferService implements TransferServiceIF {
     }
 
     private void checkAuthorization(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {
-        if (!getMailTransfer(mailTransferId).getIsAuthorized())
+        if (!getMailTransfer(mailTransferId).isAuthorized())
             throw new TransferServiceException(ErrorHelper.getUNAUTHORIZED());
     }
 
@@ -89,7 +93,11 @@ public class TransferService implements TransferServiceIF {
     @Override
     public void completeMailTransfer(String mailTransferId) throws MailTransferRepositoryException, TransferServiceException {
         // check MailTransfer is not finished yet
-        if (getMailTransfer(mailTransferId).getState().equals(MailTransfer.State.FINISHED)) {
+        if (getMailTransfer(mailTransferId).getState().equals(TRIGGERED)) {
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("MailTransfer is already triggered."));
+        }
+        // check MailTransfer is not finished yet
+        if (getMailTransfer(mailTransferId).getState().equals(FINISHED)) {
             throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("MailTransfer is already finished."));
         }
 
@@ -102,9 +110,9 @@ public class TransferService implements TransferServiceIF {
 
         taskExecutor.execute(() -> {
             try {
-                // set MailTransfer.State.TRIGGERED
+                // set TRIGGERED
                 MailTransfer mailTransfer = getMailTransfer(mailTransferId);
-                mailTransfer.setState(MailTransfer.State.TRIGGERED);
+                mailTransfer.setState(TRIGGERED);
                 mailTransferRepository.save(mailTransfer);
 
                 fileServiceClientService.uploadFiles(mailTransferId);
@@ -112,10 +120,10 @@ public class TransferService implements TransferServiceIF {
                 mailService.sendDownloadLink(mailTransferId);
                 mailService.sendSuccessMessage(mailTransferId);
 
-                // set MailTransfer.State.FINISHED
+                // set FINISHED
                 mailTransfer = getMailTransfer(mailTransferId);
-                mailTransfer.setState(MailTransfer.State.TRIGGERED);
-                mailTransfer.setState(MailTransfer.State.FINISHED);
+                mailTransfer.setState(TRIGGERED);
+                mailTransfer.setState(FINISHED);
 
             } catch (Exception e) {
                 try {
@@ -130,16 +138,30 @@ public class TransferService implements TransferServiceIF {
 
     @Override
     public void authorizeUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
-        // check user isn't authorized yet
         MailTransfer mailTransfer = getMailTransfer(mailTransferId);
-        if (mailTransfer.getIsAuthorized())
+
+        // check user hasn't exceeded authentication attempts
+        if (mailTransfer.getAuthenticationAttempts() >= NUMBER_OF_AUTHENTICATION_ATTEMPTS && !mailTransfer.getState().equals(LOCKED)) {
+            mailTransfer.setState(LOCKED);
+            mailTransferRepository.save(mailTransfer);
+        }
+        // check user isn't locked
+        if (mailTransfer.getState().equals(LOCKED)) {
+            throw new TransferServiceException(ErrorHelper.getFORBIDDEN("User for MailTransfer " + mailTransferId + " is locked because of to many failed authentication attempts."));
+        }
+
+        // check user isn't authorized yet
+        if (mailTransfer.isAuthorized())
             throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("User for MailTransfer " + mailTransferId + " is already authorized."));
 
         if (mailTransfer.getAuthenticationCode().equals(authenticationCode)) {
-            mailTransfer.setIsAuthorized(true);
+            mailTransfer.setState(AUTHORIZED);
             mailTransferRepository.save(mailTransfer);
-        } else
+        } else {
+            mailTransfer.incrementAuthenticationAttempts();
+            mailTransferRepository.save(mailTransfer);
             throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("Could not authorize user due to invalid authenticationCode: " + authenticationCode + "."));
+        }
     }
 
 }

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.osahft.api.document.MailTransfer.State.*;
+
 @Data
 @NoArgsConstructor
 @Document(indexName = "blog")
@@ -18,8 +20,10 @@ public class MailTransfer {
 
     public enum State {
         STARTED,
+        AUTHORIZED,
         TRIGGERED,
-        FINISHED
+        FINISHED,
+        LOCKED
     }
 
     @Builder
@@ -31,6 +35,14 @@ public class MailTransfer {
         this.dataDir = dataDir;
     }
 
+    public boolean isAuthorized() {
+        return state.equals(AUTHORIZED) || state.equals(TRIGGERED) || state.equals(FINISHED);
+    }
+
+    public void incrementAuthenticationAttempts() {
+        authenticationAttempts++;
+    }
+
     @Id
     private final String id = UUID.randomUUID().toString();
 
@@ -38,7 +50,7 @@ public class MailTransfer {
 
     private final Date createdAt = new Date();
 
-    private Boolean isAuthorized = false;
+    private int authenticationAttempts = 0;
 
     private String mailSender;
 
