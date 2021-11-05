@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Types} from "../../shared/types";
 
 @Component({
   selector: 'app-transfer-success',
@@ -7,7 +8,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class TransferSuccessComponent implements OnInit {
   @Input() receivers: string[] = [];
-  @Output() showFormEvent = new EventEmitter<boolean>();
+  @Output() showFormEvent = new EventEmitter<Types.FormToggleEvent>();
 
   constructor() {
     // intentional empty function body
@@ -29,6 +30,10 @@ export class TransferSuccessComponent implements OnInit {
    * @param showForm
    */
   private showFormEmitter(showForm: boolean) {
-    this.showFormEvent.emit(showForm);
+    const toggleEvent: Types.FormToggleEvent = {
+      flag: showForm,
+      receivers: []
+    }
+    this.showFormEvent.emit(toggleEvent);
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Types} from "../../shared/types";
 
 @Component({
   selector: 'app-osahft-content',
@@ -19,17 +20,10 @@ export class OsahftContentComponent implements OnInit {
 
   /**
    * Gets event from transfer form component whether to show/hide success component.
-   * @param flag
+   * @param toggleEvent
    */
-  getToggleFormEvent(flag: boolean) {
-    this.show = flag;
-  }
-
-  /**
-   * Gets receivers from transfer component to show in success page.
-   * @param receivers
-   */
-  getReceivers(receivers: string[]) {
-    this.receivers = receivers;
+  getToggleFormEvent(toggleEvent: Types.FormToggleEvent) {
+    this.show = toggleEvent.flag;
+    this.receivers = toggleEvent.receivers;
   }
 }

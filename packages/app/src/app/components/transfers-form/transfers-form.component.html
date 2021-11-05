@@ -58,8 +58,7 @@
     <div class="form-text">You can add more than one receiver for your files.</div>
   </div>
 
-  <button type="submit" class="btn btn-primary" (click)="initTransfer()">Transfer
-  </button>
+  <button type="submit" class="btn btn-primary" (click)="initTransfer()">Transfer</button>
 </form>
 
 <app-toasts></app-toasts>
@@ -88,7 +87,7 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="verifyAndExecuteTransfer()"
+    <button type="button" class="btn btn-primary" (click)="verifyAndExecuteTransfer()"
             [disabled]="!modalForm.valid">Finish transfer
     </button>
   </div>

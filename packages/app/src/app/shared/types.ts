@@ -15,4 +15,9 @@ export namespace Types {
     files: FormData;
   }
 
+  export interface FormToggleEvent {
+    flag: boolean,
+    receivers: string[]
+  }
+
 }

@@ -14,8 +14,7 @@ import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class TransfersFormComponent implements OnInit {
-  @Output() hideFormEvent = new EventEmitter<boolean>();
-  @Output() receiversEvent = new EventEmitter<string[]>();
+  @Output() hideFormEvent = new EventEmitter<Types.FormToggleEvent>();
   modalReference: any;
   modalCloseResult: any;
   mailTransferId: string = '';
@@ -77,13 +76,14 @@ export class TransfersFormComponent implements OnInit {
       "title": this.messageTitle?.value,
       "message": this.messageBody?.value
     };
-    const transferResponse: Types.CreateMailTransferResponse = await this.transferService.createMailTransfer(requestBody);
+    const transferResponse: Types.CreateMailTransferResponse | void = await this.transferService.createMailTransfer(requestBody).catch(error => console.log(error));
+
     if (!!transferResponse) {
       console.log("Mail Transfer created", transferResponse);
       this.mailTransferId = transferResponse.mailTransferId;
+      // only open token modal when response is truthy
+      this.openModal(this.tokenPopup);
     }
-
-    this.openModal(this.tokenPopup);
   }
 
   /**
@@ -94,27 +94,26 @@ export class TransfersFormComponent implements OnInit {
   async verifyAndExecuteTransfer() {
     console.log("Token:", this.token?.value);
 
-    const auth = await this.transferService.authenticateUser(this.mailTransferId, this.token?.value);
-    if (!!auth) console.log("Authenticated!", auth);
+    let success = await this.transferService.authenticateUser(this.mailTransferId, this.token?.value).catch(error => console.log(error));
+    if (!!success) console.log("Authenticated!", success);
 
     const formData = new FormData();
     for (const f of this.transferFiles?.value) {
       formData.append("files", f, f.name);
     }
 
-    let success = await this.transferService.uploadFiles(this.mailTransferId, formData);
+    success = await this.transferService.uploadFiles(this.mailTransferId, formData).catch(error => console.log(error));
 
     if (!!success) {
       console.log("Files uploaded", success);
-      success = await this.transferService.completeMailTransfer(this.mailTransferId);
+      success = await this.transferService.completeMailTransfer(this.mailTransferId).catch(error => console.log(error));
     }
 
     if (!!this.modalReference && !!success) {
       this.modalReference.close();
       // clear token input on modal close
-      this.token?.reset();
-      this.hideFormEmitter(false);
-      this.receiversEmitter(this.receiverMails?.value);
+      this.modalForm.reset();
+      this.hideFormEmitter(false, this.receiverMails?.value);
     }
 
   }
@@ -169,23 +168,15 @@ export class TransfersFormComponent implements OnInit {
   /**
    * Emits event to parent component to hide the transfer form.
    * @param showForm
-   */
-  private hideFormEmitter(showForm: boolean) {
-    this.hideFormEvent.emit(showForm);
-    this.transferFiles?.setValue([]);
-    this.messageTitle?.setValue("");
-    this.messageBody?.setValue("");
-    this.senderEmail?.setValue("");
-    this.receiverMails?.setValue([]);
-  }
-
-  /**
-   * Emits receivers to parent component to show in success page.
    * @param receivers
    */
-  private receiversEmitter(receivers: { label: string }[]) {
-    const formattedReceivers = receivers.map(receiver => receiver.label);
-    this.receiversEvent.emit(formattedReceivers);
+  private hideFormEmitter(showForm: boolean, receivers: { label: string }[]) {
+    const toEmit: Types.FormToggleEvent = {
+      flag: showForm,
+      receivers: receivers.map(receiver => receiver.label)
+    };
+    this.hideFormEvent.emit(toEmit);
+    this.transfersForm.reset();
   }
 
   get token() {
