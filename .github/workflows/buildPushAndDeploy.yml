@@ -86,6 +86,8 @@ jobs:
     services:
       elasticsearch:
         image: elasticsearch:7.14.2
+        ports:
+          9200:9200
         env:
           discovery.type: single-node
         options: >-
