@@ -130,19 +130,19 @@ jobs:
         working-directory: ./packages/api
         run: >
           echo
-          "server.servlet.context-path=/api
-          springdoc.swagger-ui.path=
-          file.service=dracoon
-          file.service.url=https://dracoon.team
-          file.service.oauth.access-token=INVALID_TOKEN
-          elasticsearch.username=username
-          elasticsearch.password=INVALID_PASSWORD
-          elasticsearch.host=elasticsearch
-          elasticsearch.port=9200
-          spring.mail.host=smtp.example.org
-          spring.mail.port=587
-          spring.mail.username=username
-          spring.mail.password=password
+          "server.servlet.context-path=/api\n 
+          springdoc.swagger-ui.path=\n 
+          file.service=dracoon\n 
+          file.service.url=https://dracoon.team\n 
+          file.service.oauth.access-token=INVALID_TOKEN\n 
+          elasticsearch.username=username\n 
+          elasticsearch.password=INVALID_PASSWORD\n 
+          elasticsearch.host=elasticsearch\n 
+          elasticsearch.port=9200\n 
+          spring.mail.host=smtp.example.org\n
+          spring.mail.port=587\n
+          spring.mail.username=username\n
+          spring.mail.password=password\n
           data.dir=/home/osahft/api"
           > src/test/resources/test.properties
 
