@@ -28,7 +28,7 @@ export class TransfersFormComponent implements OnInit {
     'mailError': this.mailError
   };
   emailPattern = new RegExp(/(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/);//NOSONAR
-  numericPattern = new RegExp(/^[0-9]{6}$/);
+  numericPattern = new RegExp(/^[\d]{6}$/);
   receiversValidators = [Validators.pattern(this.emailPattern)];
 
   transfersForm;
@@ -170,12 +170,12 @@ export class TransfersFormComponent implements OnInit {
    * @param showForm
    */
   private hideFormEmitter(showForm: boolean) {
+    this.hideFormEvent.emit(showForm);
     this.transferFiles?.setValue([]);
     this.messageTitle?.setValue("");
     this.messageBody?.setValue("");
     this.senderEmail?.setValue("");
     this.receiverMails?.setValue([]);
-    this.hideFormEvent.emit(showForm);
   }
 
   /**
