@@ -90,12 +90,9 @@ export class TransfersService {
       errorMessage = error.error.message;
     } else {
       // Get server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `${error.status}: ${error.message}`;
     }
-    //@TODO: pass error from here to toast service
-    console.log(errorMessage);
 
-    // @TODO: Fix dependency injection of toastService
     this.toastService.show(errorMessage, {
       classname: 'bg-danger text-light',
       delay: 7500,
