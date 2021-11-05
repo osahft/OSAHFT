@@ -159,9 +159,10 @@ jobs:
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
         with:
+          build-args: --driver-opt network=custom --driver-opt env.BUILDKIT_STEP_LOG_MAX_SIZE=-1 --driver-opt env.BUILDKIT_STEP_LOG_MAX_SPEED=-1
           context: ./packages/api
           push: true
-          network: github_network
+          network: ${{ job.container.network }}"
           tags: >-
             ${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}:${{steps.api-version.outputs.current-version }}
 
@@ -199,7 +200,6 @@ jobs:
 #      - name: Build and push APP Docker image
 #        uses: docker/build-push-action@v2
 #        with:
-#          build-args: --driver-opt env.BUILDKIT_STEP_LOG_MAX_SIZE=-1 --driver-opt env.BUILDKIT_STEP_LOG_MAX_SPEED=-1
 #          context: ./packages/app
 #          push: true
 #          tags: >-
