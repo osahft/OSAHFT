@@ -147,10 +147,10 @@ jobs:
           cat src/test/resources/test.properties
 
       - name: Check elastic and curl
-          id: docker-ps
-          run: >
-            docker ps -a
-            curl http://localhost:9200/_cluster/health
+        id: docker-ps
+        run: >
+          docker ps -a
+          curl http://localhost:9200/_cluster/health
 
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
