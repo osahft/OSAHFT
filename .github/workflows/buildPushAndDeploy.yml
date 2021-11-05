@@ -100,10 +100,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Check elastic
-        id: docker-ps
-        run: docker ps -a
-
       - name: Get pom version
         id: api-version
         working-directory: ./packages/api
@@ -122,12 +118,6 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         with:
           string: '${{env.IMAGE_NAME_API}}'
-
-      - name: Check file
-        id: log-properties1
-        working-directory: ./packages/api
-        run: >
-          cat src/test/resources/test.properties
 
       - name: Set test properties
         id: test-properties
@@ -149,13 +139,18 @@ jobs:
           spring.mail.password=password\n
           data.dir=/home/osahft/api'
           > src/test/resources/test.properties
-          curl http://elasticsearch:9200/_cluster/health
 
       - name: Check file no.2
         id: log-properties2
         working-directory: ./packages/api
         run: >
           cat src/test/resources/test.properties
+
+      - name: Check elastic and curl
+          id: docker-ps
+          run: >
+            docker ps -a
+            curl http://localhost:9200/_cluster/health
 
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
