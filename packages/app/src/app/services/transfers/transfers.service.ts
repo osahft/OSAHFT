@@ -85,12 +85,12 @@ export class TransfersService {
    */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // Get client-side error
-      errorMessage = error.error.message;
+    if (this.isApiError(error.error)) {
+      // Get custom error if present
+      errorMessage = `Error ${error.error.code}: ${error.error.message}`;
     } else {
-      // Get server-side error
-      errorMessage = `${error.status}: ${error.message}`;
+      // Use HttpStatusCode and HttpErrorResponse.message instead
+      errorMessage = `Error ${error.status}: ${error.message}`;
     }
 
     this.toastService.show(errorMessage, {
@@ -99,6 +99,14 @@ export class TransfersService {
       autohide: true
     });
     return throwError(errorMessage);
+  }
+
+  /**
+   * Checks whether passed object is of type `IApiError`.
+   * @param object
+   */
+  private isApiError(object: any): object is Types.IApiError {
+    return object;
   }
 
 }

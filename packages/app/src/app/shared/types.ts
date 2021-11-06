@@ -20,4 +20,8 @@ export namespace Types {
     receivers: string[]
   }
 
+  export interface IApiError {
+    code: string
+    message: string
+  }
 }
