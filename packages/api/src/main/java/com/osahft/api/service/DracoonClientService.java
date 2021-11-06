@@ -48,7 +48,7 @@ public class DracoonClientService implements FileServiceClientServiceIF {
     }
 
     @PostConstruct
-    public void init() throws FileServiceClientServiceException {
+    private void init() throws FileServiceClientServiceException {
         try {
             DracoonAuth auth = new DracoonAuth(accessToken);
             client = new DracoonClient.Builder(new URL(url))
