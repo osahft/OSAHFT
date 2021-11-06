@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 import static com.osahft.api.internal.assertion.Assertions.assertThat;
 
 
-@Disabled("Elasticsearch bean can not be created without elastic instance running, didn't find workaround for that")
+//@Disabled("Elasticsearch bean can not be created without elastic instance running, didn't find workaround for that")
 @SpringBootTest
 @TestPropertySource(locations = "classpath:test.properties")
 class PublicServiceTests {
