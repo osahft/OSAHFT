@@ -17,5 +17,5 @@ public interface TransferServiceIF {
 
     void completeMailTransfer(String mailTransferId) throws FileServiceClientServiceException, MailTransferRepositoryException, TransferServiceException;
 
-    void authenticateUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException;
+    void authorizeUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException;
 }

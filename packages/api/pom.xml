@@ -78,7 +78,18 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
+        <!--SPRING VALIDATOR-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
 
+        <!--BUCKET4J-->
+        <dependency>
+            <groupId>com.github.vladimir-bukhtoyarov</groupId>
+            <artifactId>bucket4j-core</artifactId>
+            <version>6.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>

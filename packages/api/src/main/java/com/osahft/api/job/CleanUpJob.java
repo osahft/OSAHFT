@@ -56,7 +56,19 @@ public class CleanUpJob {
                 mailTransferRepository.deleteById(mailTransfer.getId());
             }
         }
+    }
 
+    // run once every second day
+    @Scheduled(fixedRate = 2 * 24 * 60 * 60 * 1000)
+    public void cleanUpLockedMailTransfers() throws LocalFileStorageServiceException, MailTransferRepositoryException {
+        log.info("Cleaning up locked MailTransfers from database");
+        Date oneDayAgo = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+        for (MailTransfer mailTransfer : mailTransferRepository.findAll()) {
+            if (mailTransfer.getState().equals(MailTransfer.State.LOCKED) && mailTransfer.getCreatedAt().before(oneDayAgo)) {
+                localFileStorageService.deleteStorage(mailTransfer.getId());
+                mailTransferRepository.deleteById(mailTransfer.getId());
+            }
+        }
     }
 
 }

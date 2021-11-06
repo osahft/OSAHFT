@@ -5,6 +5,7 @@ import com.osahft.api.document.MailTransfer;
 import com.osahft.api.exception.LocalFileStorageServiceException;
 import com.osahft.api.exception.MailTransferRepositoryException;
 import com.osahft.api.exception.TransferServiceException;
+import com.osahft.api.helper.ErrorHelper;
 import com.osahft.api.model.CreateMailTransferRequest;
 import com.osahft.api.model.CreateMailTransferResponse;
 import com.osahft.api.repository.MailTransferRepository;
@@ -18,9 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.osahft.api.document.MailTransfer.State.*;
+
 @Service
 @Slf4j
 public class TransferService implements TransferServiceIF {
+
+    private static final int NUMBER_OF_AUTHENTICATION_ATTEMPTS = 3;
 
     @Autowired
     private LocalFileStorageServiceIF localFileStorageService;
@@ -44,14 +49,13 @@ public class TransferService implements TransferServiceIF {
                 .orElseThrow(() -> new MailTransferRepositoryException(mailTransferId));
     }
 
-    private void checkAuthentication(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {
-        if (!getMailTransfer(mailTransferId).getIsAuthenticated())
-            throw new TransferServiceException("User is not authenticated. Please authenticate user first.");
+    private void checkAuthorization(String mailTransferId) throws TransferServiceException, MailTransferRepositoryException {
+        if (!getMailTransfer(mailTransferId).isAuthorized())
+            throw new TransferServiceException(ErrorHelper.getUNAUTHORIZED());
     }
 
     @Override
     public CreateMailTransferResponse createNewMailTransfer(CreateMailTransferRequest createMailTransferRequest) throws MailTransferRepositoryException {
-
         // create and store MailTransfer
         MailTransfer mailTransfer = MailTransfer.builder()
                 .mailSender(createMailTransferRequest.getMailSender())
@@ -71,26 +75,44 @@ public class TransferService implements TransferServiceIF {
         // create dataDir
         localFileStorageService.createStorage(mailTransfer.getId());
 
-        return CreateMailTransferResponse.builder()
-                .mailTransferId(mailTransfer.getId())
-                .build();
+        return new CreateMailTransferResponse(mailTransfer.getId());
     }
 
     @Override
     public void uploadFiles(String mailTransferId, List<MultipartFile> files) throws LocalFileStorageServiceException, MailTransferRepositoryException, TransferServiceException {
-        checkAuthentication(mailTransferId);
+        checkAuthorization(mailTransferId);
+
+        // check for duplicate file names
+        long distinctFilesNames = files.stream().map(MultipartFile::getName).distinct().count();
+        if ((long) files.size() != distinctFilesNames)
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("Duplicate file names are currently not supported."));
+
         localFileStorageService.storeFiles(mailTransferId, files);
     }
 
     @Override
     public void completeMailTransfer(String mailTransferId) throws MailTransferRepositoryException, TransferServiceException {
-        checkAuthentication(mailTransferId);
+        // check MailTransfer is not finished yet
+        if (getMailTransfer(mailTransferId).getState().equals(TRIGGERED)) {
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("MailTransfer is already triggered."));
+        }
+        // check MailTransfer is not finished yet
+        if (getMailTransfer(mailTransferId).getState().equals(FINISHED)) {
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("MailTransfer is already finished."));
+        }
+
+        // check authorization
+        checkAuthorization(mailTransferId);
+
+        // check that files exist
+        if (localFileStorageService.readFiles(mailTransferId).isEmpty())
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("No files for MailTransfer " + mailTransferId + " found."));
 
         taskExecutor.execute(() -> {
             try {
-                // set MailTransfer.State.TRIGGERED
+                // set TRIGGERED
                 MailTransfer mailTransfer = getMailTransfer(mailTransferId);
-                mailTransfer.setState(MailTransfer.State.TRIGGERED);
+                mailTransfer.setState(TRIGGERED);
                 mailTransferRepository.save(mailTransfer);
 
                 fileServiceClientService.uploadFiles(mailTransferId);
@@ -98,10 +120,10 @@ public class TransferService implements TransferServiceIF {
                 mailService.sendDownloadLink(mailTransferId);
                 mailService.sendSuccessMessage(mailTransferId);
 
-                // set MailTransfer.State.FINISHED
+                // set FINISHED
                 mailTransfer = getMailTransfer(mailTransferId);
-                mailTransfer.setState(MailTransfer.State.TRIGGERED);
-                mailTransfer.setState(MailTransfer.State.FINISHED);
+                mailTransfer.setState(TRIGGERED);
+                mailTransfer.setState(FINISHED);
 
             } catch (Exception e) {
                 try {
@@ -115,13 +137,31 @@ public class TransferService implements TransferServiceIF {
     }
 
     @Override
-    public void authenticateUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
+    public void authorizeUser(String mailTransferId, Integer authenticationCode) throws MailTransferRepositoryException, TransferServiceException {
         MailTransfer mailTransfer = getMailTransfer(mailTransferId);
-        if (mailTransfer.getAuthenticationCode().equals(authenticationCode)) {
-            mailTransfer.setIsAuthenticated(true);
+
+        // check user hasn't exceeded authentication attempts
+        if (mailTransfer.getAuthenticationAttempts() >= NUMBER_OF_AUTHENTICATION_ATTEMPTS && !mailTransfer.getState().equals(LOCKED)) {
+            mailTransfer.setState(LOCKED);
             mailTransferRepository.save(mailTransfer);
-        } else
-            throw new TransferServiceException("Could not authenticate user due to invalid authenticationCode: " + authenticationCode);
+        }
+        // check user isn't locked
+        if (mailTransfer.getState().equals(LOCKED)) {
+            throw new TransferServiceException(ErrorHelper.getFORBIDDEN("User for MailTransfer " + mailTransferId + " is locked because of too many failed authentication attempts."));
+        }
+
+        // check user isn't authorized yet
+        if (mailTransfer.isAuthorized())
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("User for MailTransfer " + mailTransferId + " is already authorized."));
+
+        if (mailTransfer.getAuthenticationCode().equals(authenticationCode)) {
+            mailTransfer.setState(AUTHORIZED);
+            mailTransferRepository.save(mailTransfer);
+        } else {
+            mailTransfer.incrementAuthenticationAttempts();
+            mailTransferRepository.save(mailTransfer);
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("Could not authorize user due to invalid authenticationCode: " + authenticationCode + "."));
+        }
     }
 
 }
