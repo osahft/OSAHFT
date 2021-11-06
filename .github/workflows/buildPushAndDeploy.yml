@@ -102,6 +102,51 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set test properties
+        id: test-properties
+        working-directory: ./packages/api
+        run: >
+          echo
+          $'server.servlet.context-path=/api\n
+          springdoc.swagger-ui.path=\n
+          file.service=dracoon\n
+          file.service.url=https://dracoon.team\n
+          file.service.oauth.access-token=INVALID_TOKEN\n
+          elasticsearch.username=username\n
+          elasticsearch.password=INVALID_PASSWORD\n
+          elasticsearch.host=localhost\n
+          elasticsearch.port=${{ job.services.elasticsearch.ports['9200'] }}\n
+          spring.mail.host=smtp.example.org\n
+          spring.mail.port=587\n
+          spring.mail.username=username\n
+          spring.mail.password=password\n
+          data.dir=/home/osahft/api'
+          > src/test/resources/test.properties
+
+      - name: Check file
+        id: log-properties1
+        working-directory: ./packages/api
+        run: >
+          cat src/test/resources/test.properties
+
+      - name: Check elastic and curl
+        id: docker-ps
+        run: |
+          docker ps -a
+          curl http://localhost:9200/_cluster/health
+          echo "\n\n"
+
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build with Maven
+        working-directory: ./packages/api
+        run:
+          mvn clean package --file pom.xml
+
       - name: Get pom version
         id: api-version
         working-directory: ./packages/api
@@ -120,47 +165,6 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         with:
           string: '${{env.IMAGE_NAME_API}}'
-
-      - name: Set test properties
-        id: test-properties
-        working-directory: ./packages/api
-        run: >
-          echo
-          $'server.servlet.context-path=/api\n
-          springdoc.swagger-ui.path=\n
-          file.service=dracoon\n
-          file.service.url=https://dracoon.team\n 
-          file.service.oauth.access-token=INVALID_TOKEN\n 
-          elasticsearch.username=username\n
-          elasticsearch.password=INVALID_PASSWORD\n 
-          elasticsearch.host=elasticsearch\n
-          elasticsearch.port=${{ job.services.elasticsearch.ports['9200'] }}\n
-          spring.mail.host=smtp.example.org\n
-          spring.mail.port=587\n
-          spring.mail.username=username\n
-          spring.mail.password=password\n
-          data.dir=/home/osahft/api'
-          > src/test/resources/test.properties
-
-      - name: Check file no.2
-        id: log-properties2
-        working-directory: ./packages/api
-        run: >
-          cat src/test/resources/test.properties
-
-      - name: Check elastic and curl
-        id: docker-ps
-        run: |
-          docker ps -a
-          curl http://localhost:9200/_cluster/health
-          echo "\n\n"
-          echo "echo 1 -- ${{ job.services.elasticsearch.network }}"
-          echo "\n\n"
-          echo "echo 2 -- ${{ job.container.network }}"
-          echo "\n\n"
-          echo "host -- ${{ job.services.elasticsearch.host }}
-          echo "\n\n"
-          echo "name -- ${{ job.services.elasticsearch.name }}
 
       - name: Set up Docker Buildx
         id: osahft-buildx
