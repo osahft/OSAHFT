@@ -133,16 +133,6 @@ jobs:
         run:
           mvn clean package --file pom.xml -q
 
-      - name: Check working dir
-        working-directory: ./packages/api
-        run:
-          pwd
-
-      - name: Check working dir path variable
-        working-directory: ./packages/api
-        run:
-          echo '${{ github.workspace }}'
-
       - name: Get pom version
         id: api-version
         working-directory: ./packages/api
