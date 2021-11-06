@@ -25,7 +25,7 @@ import static com.osahft.api.document.MailTransfer.State.*;
 @Slf4j
 public class TransferService implements TransferServiceIF {
 
-    private static final int NUMBER_OF_AUTHENTICATION_ATTEMPTS = 5;
+    private static final int NUMBER_OF_AUTHENTICATION_ATTEMPTS = 3;
 
     @Autowired
     private LocalFileStorageServiceIF localFileStorageService;
@@ -147,7 +147,7 @@ public class TransferService implements TransferServiceIF {
         }
         // check user isn't locked
         if (mailTransfer.getState().equals(LOCKED)) {
-            throw new TransferServiceException(ErrorHelper.getFORBIDDEN("User for MailTransfer " + mailTransferId + " is locked because of to many failed authentication attempts."));
+            throw new TransferServiceException(ErrorHelper.getFORBIDDEN("User for MailTransfer " + mailTransferId + " is locked because of too many failed authentication attempts."));
         }
 
         // check user isn't authorized yet
