@@ -141,7 +141,7 @@ jobs:
       - name: Check working dir path variable
         working-directory: ./packages/api
         run:
-          echo '${{ GITHUB_WORKSPACE }}'
+          echo '${{ github.workspace }}'
 
       - name: Get pom version
         id: api-version
