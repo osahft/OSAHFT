@@ -26,6 +26,7 @@ services:
       - "discovery.type=single-node"
       - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - xpack.security.enabled=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
     networks:
       - osahft_db
     ports:
