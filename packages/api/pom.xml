@@ -123,6 +123,7 @@
                     <cleanTargetDir>true</cleanTargetDir>
                     <packages>
                         <param>com.osahft.api.model</param>
+                        <param>com.osahft.api.document</param>
                     </packages>
                 </configuration>
             </plugin>
