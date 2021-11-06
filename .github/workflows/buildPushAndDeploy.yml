@@ -123,20 +123,6 @@ jobs:
           data.dir=/home/osahft/api'
           > src/test/resources/test.properties
 
-      - name: Check file
-        id: log-properties1
-        working-directory: ./packages/api
-        run: >
-          cat src/test/resources/test.properties
-
-      - name: Check elastic and curl
-        id: docker-ps
-        run: |
-          docker ps -a
-          curl http://localhost:9200/_cluster/health
-          echo "\n\n"
-
-
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
@@ -145,7 +131,17 @@ jobs:
       - name: Build with Maven
         working-directory: ./packages/api
         run:
-          mvn clean package --file pom.xml
+          mvn clean package --file pom.xml -q
+
+      - name: Check working dir
+        working-directory: ./packages/api
+        run:
+          pwd
+
+      - name: Check working dir path variable
+        working-directory: ./packages/api
+        run:
+          echo '${{ GITHUB_WORKSPACE }}'
 
       - name: Get pom version
         id: api-version
@@ -165,13 +161,6 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         with:
           string: '${{env.IMAGE_NAME_API}}'
-
-      - name: Set up Docker Buildx
-        id: osahft-buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          driver-opts: network=${{ job.container.network }}
-          use: true
 
       - name: Build and push API Docker image
         uses: docker/build-push-action@v2
