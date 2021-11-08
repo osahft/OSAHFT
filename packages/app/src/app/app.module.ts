@@ -14,6 +14,7 @@ import {OsahftContentComponent} from './components/osahft-content/osahft-content
 import {ToastComponent} from "./components/toast/toast.component";
 import {ToastService} from "./services/toast/toast.service";
 import {TransfersService} from "./services/transfers/transfers.service";
+import { TransferSuccessComponent } from './components/transfer-success/transfer-success.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {TransfersService} from "./services/transfers/transfers.service";
     TransfersFormComponent,
     OsahftContentComponent,
     ToastComponent,
+    TransferSuccessComponent,
   ],
   imports: [
     BrowserModule,

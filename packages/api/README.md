@@ -37,3 +37,7 @@
 - if you get an error similar to `No qualifying bean of type 'org.springframework.boot.info.BuildProperties' available`
   you should delegate IDE build/run actions to maven (Intellij: Settings > Build, Execution, Deployment > Build Tools >
   Maven > Runner > check `Delegate IDE build/run actions to Maven`)
+
+## Adding https-support
+To run the api with https use the following tutorial \
+https://www.baeldung.com/spring-boot-https-self-signed-certificate

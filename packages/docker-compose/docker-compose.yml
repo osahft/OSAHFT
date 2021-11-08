@@ -32,10 +32,9 @@ services:
     ports:
       - "9200:9200"
     healthcheck:
-      test: ["CMD-SHELL", "curl -u elastic:${ELASTICSEARCH_PASSWORD} -s http://localhost:9200/_cat/health?h=status | grep -q green"]
+      test: ["CMD-SHELL", "curl -u elastic:${ELASTICSEARCH_PASSWORD} -s http://localhost:9200/_cat/health?h=status | grep -q 'green\\|yellow'"]
       interval: 30s
       timeout: 10s
-      retries: 5
 
 
   kibana:
