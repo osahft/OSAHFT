@@ -16,6 +16,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,10 @@ public class TransferService implements TransferServiceIF {
     public void uploadFiles(String mailTransferId, List<MultipartFile> files) throws LocalFileStorageServiceException, MailTransferRepositoryException, TransferServiceException {
         checkAuthorization(mailTransferId);
 
+        // check list is not empty or null
+        if (files == null || files.isEmpty())
+            throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("Files array must not be empty or null."));
+
         // check for duplicate file names
         long distinctFilesNames = files.stream().map(MultipartFile::getName).distinct().count();
         if ((long) files.size() != distinctFilesNames)
@@ -105,7 +110,8 @@ public class TransferService implements TransferServiceIF {
         checkAuthorization(mailTransferId);
 
         // check that files exist
-        if (localFileStorageService.readFiles(mailTransferId).isEmpty())
+        List<File> files = localFileStorageService.readFiles(mailTransferId);
+        if (files == null || files.isEmpty())
             throw new TransferServiceException(ErrorHelper.getBAD_REQUEST("No files for MailTransfer " + mailTransferId + " found."));
 
         taskExecutor.execute(() -> {
@@ -122,8 +128,8 @@ public class TransferService implements TransferServiceIF {
 
                 // set FINISHED
                 mailTransfer = getMailTransfer(mailTransferId);
-                mailTransfer.setState(TRIGGERED);
                 mailTransfer.setState(FINISHED);
+                mailTransferRepository.save(mailTransfer);
 
             } catch (Exception e) {
                 try {

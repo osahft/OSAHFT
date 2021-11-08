@@ -22,7 +22,7 @@
 
 1. open pom.xml
 2. set the parameter `skip` of the `configuration` section of the `assertj-assertions-generator-maven-plugin` to `false`
-3. run `mvn assertj:generate-assertions`
+3. run `mvn clean package -DskipTests=true && mvn assertj:generate-assertions`
 4. copy the newly generated assertions
    from `target/generated-test-sources/assertj-assertions/com/osahft/api/internal/assertion`
    to `src/test/java/com/osahft/api/internal/assertion` (Make sure you only copy the missing ones)
