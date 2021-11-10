@@ -51,4 +51,10 @@ spring.mail.password=
 # e.g. /srv/osahft/api/data
 data.dir=
 
+# Maximum file size [String]
+# Default: 10MB
+# spring.servlet.multipart.max-file-size=
 
+# Maximum request size [String]
+# Default: 10MB
+# spring.servlet.multipart.max-request-size=
