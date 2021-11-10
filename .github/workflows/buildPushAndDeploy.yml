@@ -11,7 +11,7 @@
 # - distributhor/workflow-webhook@v2 | https://github.com/distributhor/workflow-webhook
 # - actions/setup-java@v1 | https://github.com/actions/setup-java
 
-name: Build osahft and push docker images
+name: Build OSAHFT and push docker images
 
 on:
   workflow_dispatch:
