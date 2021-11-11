@@ -14,6 +14,15 @@ Currently [DRACOON](https://www.dracoon.com/) is the only supported file service
 │   ├── app/                            angular frontend
 │   ├── docker-compose/                 docker compose
 ```
+## Running OSAHFT
+Follow the instructions in [docker-compose/README.md](packages/docker-compose/README.md) 
+
+## Further documentation
+The API, APP and Docker-Compose are documented under:  
+[API-Documentation](packages/api/README.md)  
+[APP-Documentation](packages/app/README.md)  
+[Docker-Compose-Documentation](packages/docker-compose/README.md)
+
 ## Git Workflow
 
 We are using the [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).
