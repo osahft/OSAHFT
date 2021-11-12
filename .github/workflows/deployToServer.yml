@@ -21,7 +21,6 @@ jobs:
         id: timestamp
         run: |
           echo "::set-output name=timestamp::$(date +'%Y-%m-%d_%H-%M-%S')"
-
       - name: Invoke deployment hook
         uses: distributhor/workflow-webhook@v2
         env:
