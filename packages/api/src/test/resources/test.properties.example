@@ -1,0 +1,38 @@
+# Base URL
+server.servlet.context-path=/api
+  # Swagger-ui path
+springdoc.swagger-ui.path=
+# File service [String]
+# Available values: [dracoon]
+# Note: currently only dracoon available
+file.service=dracoon
+# File service url [String]
+# Note: url to file service e.g. https://dracoon.team
+file.service.url=https://dracoon.team
+# File service oauth access token [String]
+# Note: set an access token with period of validity like 10 years, otherwise file service communication will fail when token has expired
+file.service.oauth.access-token=INVALID_TOKEN
+spring.boot.autoconfigure.exclude=
+# Elasticsearch username [String]
+elasticsearch.username=elastic
+# Elasticsearch password [String]
+elasticsearch.password=
+# Elasticsearch host [String]
+# e.g. localhost
+elasticsearch.host=localhost
+# Elasticsearch port [Integer]
+# e.g. 9200
+elasticsearch.port=9200
+  # SMTP host [String]
+  # e.g. smtp.example.org
+spring.mail.host=smtp.example.org
+  # SMTP port [Integer]
+  # e.g. 587
+spring.mail.port=587
+  # SMTP username [String]
+spring.mail.username=username
+  # SMTP password [String]
+spring.mail.password=password
+  # Data directory [String]
+  # e.g. /srv/osahft/api/data
+data.dir=

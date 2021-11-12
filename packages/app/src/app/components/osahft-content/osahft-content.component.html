@@ -1,0 +1,14 @@
+<div class="osahft-content">
+
+
+  <div *ngIf="show; else success">
+    <h1 class="text-lowercase">Welcome to OSAHFT</h1>
+    <h2 class="small text-lowercase mb-3">Your Free-To-Use Open Source Ad Hoc File Transfer</h2>
+    <app-transfers-form (hideFormEvent)="getToggleFormEvent($event)"></app-transfers-form>
+  </div>
+
+  <ng-template #success>
+    <app-transfer-success (showFormEvent)="getToggleFormEvent($event)" [receivers]="receivers"></app-transfer-success>
+  </ng-template>
+
+</div>

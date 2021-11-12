@@ -1,0 +1,21 @@
+<div class="pt-5 pb-5">
+  <h1>Hooray!!!</h1>
+  <h2 class="small text-lowercase mb-3">Your files were successfully sent to
+    <strong *ngFor="let receiver of receivers; let isLast=last">
+      {{receiver}}{{isLast ? '.' : ', '}}
+    </strong>
+  </h2>
+
+  <figure class="figure mt-5 mb-5">
+    <img src="https://c.tenor.com/fnC2yY_o_lMAAAAC/oscars-success.gif"
+         alt="Leonardi DiCaprio from 'The Great Gatsby' lifting champagne bottle"
+         class="figure-img img-fluid rounded">
+    <figcaption class="figure-caption">
+      <div class="small">
+        <a href="https://tenor.com/view/oscars-success-leonardodicaprio-gif-4950041">Oscars Success GIF</a>
+        from <a href="https://tenor.com/">tenor.com</a>
+      </div>
+    </figcaption>
+  </figure>
+  <button class="btn btn-primary" (click)="toggleForm()">Send more files</button>
+</div>

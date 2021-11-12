@@ -1,0 +1,20 @@
+@import "osahft-theme";
+
+file-upload {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px dashed #ccc;
+  outline: rgba(255, 255, 255, 0.5);
+  max-height: 140px;
+  overflow-y: scroll;
+}
+
+.form-error.ng-invalid.ng-touched, #senderEmail.ng-invalid.ng-touched,
+#messageTitle.ng-invalid.ng-touched, #message.ng-invalid.ng-touched, #token.ng-invalid.ng-touched {
+  border: 1px solid red;
+  border-radius: 5px;
+}
+
+.form-text {
+  font-size: .75rem;
+  color: #999;
+}

@@ -1,0 +1,94 @@
+<form [formGroup]="transfersForm">
+  <div class="form-group">
+    <div class="box">
+      <file-upload class="form-error" formControlName="transferFiles" [animation]=false>
+      </file-upload>
+    </div>
+    <div *ngIf="transferFiles?.invalid && transferFiles?.touched">
+      <small class="text-danger">{{filesError}}</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="messageTitle" class="form-label">Title</label>
+    <input type="text"
+           formControlName="messageTitle"
+           class="form-control" name="messageTitle" id="messageTitle"/>
+    <div *ngIf="messageTitle?.invalid && messageTitle?.touched">
+      <small class="text-danger">{{titleError}}</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="message" class="form-label">Message</label>
+    <textarea formControlName="messageBody" id="message" class="form-control" name="messageBody"></textarea>
+    <div *ngIf="messageBody?.invalid && messageBody?.touched">
+      <small class="text-danger">{{messageError}}</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="senderEmail" class="form-label">Your email</label>
+    <input type="email" formControlName="senderEmail"
+           class="form-control" name="senderEmail"
+           id="senderEmail"/>
+    <div *ngIf="senderEmail?.invalid && senderEmail?.touched">
+      <small class="text-danger">{{mailError}}</small>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Email to</label>
+    <tag-input formControlName="receiverMails"
+               class="form-error"
+               [displayBy]="'label'"
+               [validators]="receiversValidators"
+               [identifyBy]="'label'"
+               [theme]="'osahft-theme'"
+               placeholder="+"
+               secondaryPlaceholder=""
+               [separatorKeyCodes]="[32, 188]"
+               [addOnBlur]=true
+               [removable]=true>
+    </tag-input>
+    <div *ngIf="receiverMails?.invalid && receiverMails?.touched">
+      <small class="text-danger">{{mailError}}</small>
+    </div>
+    <div class="form-text">You can add more than one receiver for your files.</div>
+  </div>
+
+  <button type="submit" class="btn btn-primary" (click)="initTransfer()">Transfer</button>
+</form>
+
+<app-toasts></app-toasts>
+
+<ng-template #tokenPopup let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Verify your transfer</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>We have send a verification token to your email address <strong>{{senderEmail?.value}}</strong>. Please check
+      your email
+      account and fill in the token below to finish your transfer.</p>
+    <form [formGroup]="modalForm">
+      <div class="form-group">
+        <label for="token">Enter token</label>
+
+        <input type="text" id="token" formControlName="token" class="form-control" ngbAutofocus/>
+        <div *ngIf="!token?.valid && token?.touched">
+          <small class="text-danger">{{tokenError}}</small>
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="verifyAndExecuteTransfer()"
+            [disabled]="modalForm.invalid">Finish transfer
+    </button>
+  </div>
+</ng-template>
