@@ -202,7 +202,7 @@ jobs:
           context: ./packages/app
           push: true
           tags: >-
-            ${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}:${{steps.package-version.outputs.current-version}}-SNAPSHOT
+            ${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}:${{steps.package-version.outputs.current-version}}
   deployToServer:
     name: Trigger deployment to server
     needs: [buildApiDocker, buildAppDocker]

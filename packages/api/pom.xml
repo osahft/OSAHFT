@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.osahft</groupId>
     <artifactId>api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>api</name>
     <description>Open Source Ad Hoc File Transfer API</description>
     <properties>
